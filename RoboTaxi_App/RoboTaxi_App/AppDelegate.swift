@@ -13,10 +13,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
+    let barTint = UIColor(red:0.94, green:0.82, blue:0.57, alpha:1.0)
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //Theme Stuff
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        
+        
+        UINavigationBar.appearance().barTintColor = barColor
+        
+        UIBarButtonItem.appearance().tintColor = barTint
+        //Since iOS 7.0 UITextAttributeTextColor was replaced by NSForegroundColorAttributeName
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        UITabBar.appearance().backgroundColor = barColor;
+        
         
         return true
     }

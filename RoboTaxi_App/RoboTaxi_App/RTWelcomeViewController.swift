@@ -19,7 +19,6 @@ class RTWelcomeViewController: UIViewController {
         setupButtons()
         // Do any additional setup after loading the view, typically from a nib.
         
-        
     }
     
     func setupButtons () {
@@ -38,6 +37,21 @@ class RTWelcomeViewController: UIViewController {
         signupButton.layer.borderWidth = borderWidth
         signupButton.layer.borderColor = buttonColor?.cgColor
     }
+    
+    @IBAction func loginButtonPressed(_ sender: Any) {
+        
+        
+    }
+    
+    @IBAction func signupButtonPressed(_ sender: Any) {
+        
+        let alert = UIAlertController(title: "Coming Soon!", message: "This feature is still being worked on.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
