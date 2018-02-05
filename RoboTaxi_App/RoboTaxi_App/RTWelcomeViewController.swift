@@ -21,6 +21,8 @@ class RTWelcomeViewController: UIViewController {
         
     }
     
+    
+    
     func setupButtons () {
         
         let buttonColor = loginButton.titleLabel?.textColor

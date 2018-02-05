@@ -24,6 +24,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="61T-g6-P9S">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x5y-Up-VJB">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.31764705882352939" green="0.36470588235294116" blue="0.44313725490196076" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" image="icon-512" translatesAutoresizingMaskIntoConstraints="NO" id="x4j-rh-obd">
                                 <rect key="frame" x="96" y="59" width="182" height="195"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -87,32 +96,53 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="9nj-35-tNj">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KZn-fN-HdZ">
-                                <rect key="frame" x="44" y="552" width="287" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0yu-5g-Iaq">
+                                <rect key="frame" x="16" y="597" width="343" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="28"/>
+                                <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
                                 <state key="normal" title="Request Vehicle">
-                                    <color key="titleColor" red="0.93725490199999995" green="0.81960784310000001" blue="0.56862745100000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kbV-dQ-1b8"/>
-                                    <action selector="requestVehicle:" destination="LCQ-O3-7LE" eventType="touchUpInside" id="aLB-qe-CQ0"/>
+                                    <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AIp-I7-KIO"/>
                                 </connections>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Bo-fx-MY5">
+                                <rect key="frame" x="16" y="544" width="343" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wex-LJ-ugH">
+                                <rect key="frame" x="16" y="20" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="default_profile"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="W6w-K6-bzQ"/>
                     </view>
-                    <navigationItem key="navigationItem" title="RoboTaxi" id="fyY-rd-O3B"/>
+                    <navigationItem key="navigationItem" id="fyY-rd-O3B"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="currentLocationBarView" destination="5Bo-fx-MY5" id="eo4-Na-LDh"/>
                         <outlet property="mainMapView" destination="9nj-35-tNj" id="wzr-5V-YcV"/>
-                        <outlet property="requestVehicleButton" destination="KZn-fN-HdZ" id="gV5-lP-Xci"/>
+                        <outlet property="profileButton" destination="wex-LJ-ugH" id="I3u-hd-8ZO"/>
+                        <outlet property="requestVehicleButton" destination="0yu-5g-Iaq" id="ISy-0b-3Ua"/>
+                        <outlet property="searchDisplayController" destination="1jw-1G-qWj" id="mNF-iY-uSj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gt5-yk-j3j" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="1jw-1G-qWj">
+                    <connections>
+                        <outlet property="delegate" destination="LCQ-O3-7LE" id="FTc-1v-360"/>
+                        <outlet property="searchContentsController" destination="LCQ-O3-7LE" id="6QA-NE-XUW"/>
+                        <outlet property="searchResultsDataSource" destination="LCQ-O3-7LE" id="p09-34-GaX"/>
+                        <outlet property="searchResultsDelegate" destination="LCQ-O3-7LE" id="yMN-Ai-Orj"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1621.5999999999999" y="132.68365817091455"/>
         </scene>
@@ -136,6 +166,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="background" width="2311" height="1500"/>
+        <image name="default_profile" width="256" height="256"/>
         <image name="icon-512" width="512" height="512"/>
     </resources>
 </document>

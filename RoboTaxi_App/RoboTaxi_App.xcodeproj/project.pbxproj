@@ -11,6 +11,7 @@
 		B32E58472026BFE4007974B9 /* RTRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */; };
 		B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */; };
 		B32E584C2026FE25007974B9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32E584B2026FE25007974B9 /* MapKit.framework */; };
+		B340B0082027C8F900C66128 /* RTNetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B340B0072027C8F900C66128 /* RTNetworkController.swift */; };
 		B3A440C62025A9F4005DC45C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A440C52025A9F4005DC45C /* AppDelegate.swift */; };
 		B3A440C82025A9F4005DC45C /* RTWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A440C72025A9F4005DC45C /* RTWelcomeViewController.swift */; };
 		B3A440CB2025A9F4005DC45C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A440C92025A9F4005DC45C /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 		B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTRegisterViewController.swift; sourceTree = "<group>"; };
 		B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTMainScreenViewController.swift; sourceTree = "<group>"; };
 		B32E584B2026FE25007974B9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		B340B0072027C8F900C66128 /* RTNetworkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTNetworkController.swift; sourceTree = "<group>"; };
 		B3A440C22025A9F4005DC45C /* RoboTaxi_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoboTaxi_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3A440C52025A9F4005DC45C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3A440C72025A9F4005DC45C /* RTWelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTWelcomeViewController.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				B32E58442026BFD0007974B9 /* RTLoginViewController.swift */,
 				B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */,
 				B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */,
+				B340B0072027C8F900C66128 /* RTNetworkController.swift */,
 				B3A440C92025A9F4005DC45C /* Main.storyboard */,
 				B3A440CC2025A9F4005DC45C /* Assets.xcassets */,
 				B3A440CE2025A9F4005DC45C /* LaunchScreen.storyboard */,
@@ -224,6 +227,7 @@
 				B3A440C82025A9F4005DC45C /* RTWelcomeViewController.swift in Sources */,
 				B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */,
 				B3A440C62025A9F4005DC45C /* AppDelegate.swift in Sources */,
+				B340B0082027C8F900C66128 /* RTNetworkController.swift in Sources */,
 				B32E58472026BFE4007974B9 /* RTRegisterViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
