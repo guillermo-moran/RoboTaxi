@@ -104,6 +104,15 @@ class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocatio
    
     
     @IBAction func requestVehicle(_ sender: Any) {
+        
+        let networkController = RTNetworkController.sharedInstance
+        
+        if (networkController.testMainServerConnection()) {
+            let alert = UIAlertController(title: "Success!", message: "Server Response Recieved!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
     }
     
     //Uber-like movements
