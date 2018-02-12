@@ -11,18 +11,20 @@ class Vehicle
     private $vehicleID;
     private $ownerID;
     private $capacity;
-    private $in_service;
-    private $in_use;
-    private $current_location;
+    private $inService;
+    private $inUse;
+    private $currentLatitude;
+    private $currentLongitude;
 
-    public function __construct(int $vehicleID, int $ownerID, int $capacity, bool $in_service, bool $in_use, string $current_location)
+    public function __construct(int $vehicleID, int $ownerID, int $capacity, bool $inService, bool $inUse, float $currentLatitude, float $currentLongitude)
     {
         $this -> vehicleID = $vehicleID;
         $this -> ownerID = $ownerID;
         $this -> capacity = $capacity;
-        $this -> in_service = $in_service;
-        $this -> in_use = $in_use;
-        $this -> current_location = $current_location;
+        $this -> inService = $inService;
+        $this -> inUse = $inUse;
+        $this -> currentLatitude = $currentLatitude;
+        $this -> currentLongitude = $currentLongitude;
     }
 
     // get functions
@@ -43,17 +45,18 @@ class Vehicle
 
     public function getVehicleAvailability() : bool
     {
-        return $this -> in_service;
+        return $this -> inService;
     }
 
     public function getVehicleBusyStatus() : bool
     {
-        return $this -> in_use;
+        return $this -> inUse;
     }
 
-    public function getVehicleCurrentLocation() : string
+    public function getVehicleCurrentLocation() : array
     {
-        return $this -> current_location;
+        $tmp = array($this->currentLatitude, $this->currentLongitude);
+        return $tmp;
     }
 
 
@@ -75,16 +78,17 @@ class Vehicle
 
     public function setVehicleAvailability(Bool $newStatus)
     {
-        $this -> in_service = $newStatus;
+        $this -> inService = $newStatus;
     }
 
     public function setVehicleBusyStatus(Bool $newStatus)
     {
-        $this -> in_use = $newStatus;
+        $this -> inUse = $newStatus;
     }
 
-    public function setVehicleCurrentLocation(String $newLocation)
+    public function setVehicleCurrentLocation(float $newLongitude, float $newLatitude)
     {
-        $this -> current_location = $newLocation;
+        $this -> currentLongitude = $newLongitude;
+        $this -> currentLatitude = $newLatitude;
     }
 }
