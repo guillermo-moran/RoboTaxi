@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
 
@@ -39,7 +39,6 @@ class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocatio
         initializeMapView()
         UIApplication.shared.statusBarStyle = .default
 
-        
         
         let buttonColor = barColor
         let cornerRadius = CGFloat(10)
@@ -79,6 +78,10 @@ class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocatio
         self.mainMapView.delegate = self
         self.mainMapView.showsUserLocation = true
         
+        //Set custom map overlay
+        let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
+        self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
+        
         //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
         //mainMapView.setRegion(coordinateRegion, animated: true)
        
@@ -105,47 +108,43 @@ class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocatio
     
     @IBAction func requestVehicle(_ sender: Any) {
         
-        let networkController = RTNetworkController.sharedInstance
+        let orderController = RTVehicleOrderController.sharedInstance
         
+        let newOrder = orderController.requestNewOrder()
+        
+        //If the order is empty, an error occured. Tell the user.
+        
+        if (orderController.isEmptyOrder(order: newOrder)) {
+            
+            let alert = UIAlertController(title: "Error", message: "An error occurred while processing your order.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        
+        let order_id = newOrder.getOrderID()
+        let vehicle_id = newOrder.getVehicleID()
+        let orderDate = newOrder.getOrderDate()
+        
+        let alert = UIAlertController(title: "Order Created!", message: "The following order has been created: \n Order ID : \(order_id) \n Vehicle ID : \(vehicle_id) \n Order Date : \(orderDate)", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
+        /*
+        let networkController = RTNetworkController.sharedInstance
         if (networkController.testMainServerConnection()) {
-            let alert = UIAlertController(title: "Success!", message: "Server Response Recieved!", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Not Available!", message: "RoboTaxi is not available yet!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+        */
         
     }
     
-    //Uber-like movements
     
-    //NOTE: Rewrite this in swift
-    
-    /*
-     -(float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second {
- 
-        float deltaLongitude = second.longitude - first.longitude;
-        float deltaLatitude = second.latitude - first.latitude;
-        float angle = (M_PI * .5f) - atan(deltaLatitude / deltaLongitude);
- 
-        if (deltaLongitude > 0)      return angle;
-        else if (deltaLongitude < 0) return angle + M_PI;
-        else if (deltaLatitude < 0)  return M_PI;
- 
-        return 0.0f;
-     }
      
-     float getAngle = [self angleFromCoordinate:oldLocation toCoordinate:newLocation];
-     
-     //Apply the new location for coordinate.
-     myAnnotation.coordinate = newLocation;
-     
-     //For getting the MKAnnotationView.
-     AnnotationView *annotationView = (AnnotationView *)[self.mapView viewForAnnotation:myAnnotation];
-     
-     //Apply the angle for moving the car.
-     annotationView.transform = CGAffineTransformMakeRotation(getAngle);
-     
-     
-     */
     
 
     /*
@@ -158,4 +157,13 @@ class RTMainScreenViewController: UIViewController, MKMapViewDelegate, CLLocatio
     }
     */
 
+}
+
+extension RTMainScreenViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let tileOverlay = overlay as? MKTileOverlay else {
+            return MKOverlayRenderer()
+        }
+        return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+    }
 }

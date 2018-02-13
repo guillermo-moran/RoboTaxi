@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3243AD9202AF7CE00D0ABD3 /* PandaTiileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243AD8202AF7CE00D0ABD3 /* PandaTiileOverlay.swift */; };
+		B3243ADB202AF7D000D0ABD3 /* TiileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243ADA202AF7D000D0ABD3 /* TiileOverlay.swift */; };
+		B3243ADF202E5D7700D0ABD3 /* RTUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243ADE202E5D7700D0ABD3 /* RTUser.swift */; };
+		B3243AE12032895700D0ABD3 /* RTOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243AE02032895700D0ABD3 /* RTOrder.swift */; };
+		B3243AE420328D1700D0ABD3 /* RTVehicleOrderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243AE320328D1700D0ABD3 /* RTVehicleOrderController.swift */; };
+		B3243AE72032BC6200D0ABD3 /* RTVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3243AE62032BC6200D0ABD3 /* RTVehicle.swift */; };
 		B32E58452026BFD0007974B9 /* RTLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32E58442026BFD0007974B9 /* RTLoginViewController.swift */; };
 		B32E58472026BFE4007974B9 /* RTRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */; };
 		B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */; };
@@ -32,6 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B3243AD8202AF7CE00D0ABD3 /* PandaTiileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PandaTiileOverlay.swift; sourceTree = "<group>"; };
+		B3243ADA202AF7D000D0ABD3 /* TiileOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiileOverlay.swift; sourceTree = "<group>"; };
+		B3243ADE202E5D7700D0ABD3 /* RTUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTUser.swift; sourceTree = "<group>"; };
+		B3243AE02032895700D0ABD3 /* RTOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTOrder.swift; sourceTree = "<group>"; };
+		B3243AE320328D1700D0ABD3 /* RTVehicleOrderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleOrderController.swift; sourceTree = "<group>"; };
+		B3243AE62032BC6200D0ABD3 /* RTVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicle.swift; sourceTree = "<group>"; };
 		B32E58442026BFD0007974B9 /* RTLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTLoginViewController.swift; sourceTree = "<group>"; };
 		B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTRegisterViewController.swift; sourceTree = "<group>"; };
 		B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTMainScreenViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +81,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B3243ADC202AF7EE00D0ABD3 /* CustomMap */ = {
+			isa = PBXGroup;
+			children = (
+				B3243AD8202AF7CE00D0ABD3 /* PandaTiileOverlay.swift */,
+				B3243ADA202AF7D000D0ABD3 /* TiileOverlay.swift */,
+			);
+			path = CustomMap;
+			sourceTree = "<group>";
+		};
+		B3243ADD202E5D5400D0ABD3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B3243ADE202E5D7700D0ABD3 /* RTUser.swift */,
+				B3243AE02032895700D0ABD3 /* RTOrder.swift */,
+				B3243AE62032BC6200D0ABD3 /* RTVehicle.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B3243AE220328CA600D0ABD3 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B340B00B20282EB200C66128 /* KeychainTools.swift */,
+				B340B0072027C8F900C66128 /* RTNetworkController.swift */,
+				B3243AE320328D1700D0ABD3 /* RTVehicleOrderController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		B3243AE520328D3100D0ABD3 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				B3A440C72025A9F4005DC45C /* RTWelcomeViewController.swift */,
+				B32E58442026BFD0007974B9 /* RTLoginViewController.swift */,
+				B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */,
+				B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
 		B32E584A2026FE25007974B9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,13 +151,11 @@
 		B3A440C42025A9F4005DC45C /* RoboTaxi_App */ = {
 			isa = PBXGroup;
 			children = (
+				B3243AE520328D3100D0ABD3 /* Interface */,
+				B3243AE220328CA600D0ABD3 /* Controllers */,
+				B3243ADD202E5D5400D0ABD3 /* Models */,
+				B3243ADC202AF7EE00D0ABD3 /* CustomMap */,
 				B3A440C52025A9F4005DC45C /* AppDelegate.swift */,
-				B3A440C72025A9F4005DC45C /* RTWelcomeViewController.swift */,
-				B32E58442026BFD0007974B9 /* RTLoginViewController.swift */,
-				B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */,
-				B32E58482026BFF7007974B9 /* RTMainScreenViewController.swift */,
-				B340B0072027C8F900C66128 /* RTNetworkController.swift */,
-				B340B00B20282EB200C66128 /* KeychainTools.swift */,
 				B3A440C92025A9F4005DC45C /* Main.storyboard */,
 				B3A440CC2025A9F4005DC45C /* Assets.xcassets */,
 				B3A440CE2025A9F4005DC45C /* LaunchScreen.storyboard */,
@@ -227,12 +277,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				B32E58452026BFD0007974B9 /* RTLoginViewController.swift in Sources */,
+				B3243ADB202AF7D000D0ABD3 /* TiileOverlay.swift in Sources */,
 				B3A440C82025A9F4005DC45C /* RTWelcomeViewController.swift in Sources */,
+				B3243AE420328D1700D0ABD3 /* RTVehicleOrderController.swift in Sources */,
 				B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */,
+				B3243AE12032895700D0ABD3 /* RTOrder.swift in Sources */,
 				B3A440C62025A9F4005DC45C /* AppDelegate.swift in Sources */,
 				B340B0082027C8F900C66128 /* RTNetworkController.swift in Sources */,
+				B3243AE72032BC6200D0ABD3 /* RTVehicle.swift in Sources */,
 				B340B00C20282EB200C66128 /* KeychainTools.swift in Sources */,
 				B32E58472026BFE4007974B9 /* RTRegisterViewController.swift in Sources */,
+				B3243ADF202E5D7700D0ABD3 /* RTUser.swift in Sources */,
+				B3243AD9202AF7CE00D0ABD3 /* PandaTiileOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
