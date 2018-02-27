@@ -17,14 +17,19 @@ $db->PConnect('localhost','meicherc_phpUser','KEvMLTly36','meicherc_dbs');
 
 $rs = $db->Execute("select vehicleID, ownerID, capacity, inService, inUse, currentLatitude, currentLongitude from WeGoVehicleDB where vehicleID = " . reset($_GET));
 
-print "{ </br>";
-print "\"vehicleID\": " . $rs->fields['vehicleID'] . ", </br>";
-print "\"ownerID\": " . $rs->fields['ownerID'] . ", </br>";
-print "\"capacity\": " . $rs->fields['capacity'] . ", </br>";
-print "\"inService\": " . $rs->fields['inService'] . ", </br>";
-print "\"inUse\": " . $rs->fields['inUse'] . ", </br>";
-print "\"currentLatitude\": " . $rs->fields['currentLatitude'] . ", </br>";
-print "\"currentLongitude\": " . $rs->fields['currentLongitude'] . ", </br>";
-print "} </br>";
+
+$vehicle = new stdClass();
+
+$vehicle -> vehicleID           = $rs->fields['vehicleID'];
+$vehicle -> ownerID             = $rs->fields['ownerID'];
+$vehicle -> capacity            = $rs->fields['capacity'];
+$vehicle -> inService           = $rs->fields['inService'];
+$vehicle -> inUse               = $rs->fields['inUse'];
+$vehicle -> currentLatitude     = $rs->fields['currentLatitude'];
+$vehicle -> currentLongitude    = $rs->fields['currentLongitude'];
+
+$json = json_encode($vehicle);
+echo $json;
+
 
 ?>
