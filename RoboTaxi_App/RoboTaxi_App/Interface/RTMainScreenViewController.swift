@@ -5,11 +5,12 @@
 //  Created by Guillermo Moran on 2/3/18.
 //  Copyright © 2018 WeGo. All rights reserved.
 //
+// http://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=vc%20stuff
 
 import UIKit
 import MapKit
 
-class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
+class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
     
@@ -19,11 +20,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var requestVehicleButton: UIButton!
     
     
-    var locationManager = CLLocationManager()
-    var userLocation = CLLocation()
+    private var locationManager = CLLocationManager()
+    private var userLocation = CLLocation()
     
     /*
-        Standard View Stuff
+     ██╗   ██╗ ██████╗    ███████╗████████╗██╗   ██╗███████╗███████╗
+     ██║   ██║██╔════╝    ██╔════╝╚══██╔══╝██║   ██║██╔════╝██╔════╝
+     ██║   ██║██║         ███████╗   ██║   ██║   ██║█████╗  █████╗
+     ╚██╗ ██╔╝██║         ╚════██║   ██║   ██║   ██║██╔══╝  ██╔══╝
+      ╚████╔╝ ╚██████╗    ███████║   ██║   ╚██████╔╝██║     ██║
+       ╚═══╝   ╚═════╝    ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝
     */
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,9 +82,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     /*
- 
-        Interface Actions
-     
+     ██╗   ██╗██╗     █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+     ██║   ██║██║    ██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+     ██║   ██║██║    ███████║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
+     ██║   ██║██║    ██╔══██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
+     ╚██████╔╝██║    ██║  ██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
+      ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
     
     @IBAction func requestVehicle(_ sender: Any) {
@@ -107,15 +116,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         
-        
-        
     }
     
     
     /*
- 
-        Location Stuff
-     
+     ██╗      ██████╗  ██████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
+     ██║     ██╔═══██╗██╔════╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
+     ██║     ██║   ██║██║     ███████║   ██║   ██║██║   ██║██╔██╗ ██║
+     ██║     ██║   ██║██║     ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
+     ███████╗╚██████╔╝╚██████╗██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
+     ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
     */
     
     //Location didUpdateLocations delegate
@@ -127,14 +137,6 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
     }
     
-   
-    
-   
-    
-    
-     
-    
-
     /*
     // MARK: - Navigation
 
@@ -146,11 +148,43 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     */
     
     /*
-     
-     Map View Stuff
-     
+     ███╗   ███╗ █████╗ ██████╗
+     ████╗ ████║██╔══██╗██╔══██╗
+     ██╔████╔██║███████║██████╔╝
+     ██║╚██╔╝██║██╔══██║██╔═══╝
+     ██║ ╚═╝ ██║██║  ██║██║
+     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝
      */
     
+    func initializeMapView() {
+        
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+        self.locationManager.delegate = self
+        
+        self.mainMapView.delegate = self
+        self.mainMapView.showsUserLocation = true
+        
+        //Set custom map overlay
+        //let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
+        //self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
+        
+        //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
+        //mainMapView.setRegion(coordinateRegion, animated: true)
+        
+        loadAllVehicleAnnotations()
+        requestTestRoute()
+        
+    }
+    
+    /*
+      █████╗ ███╗   ██╗███╗   ██╗ ██████╗ ████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗███████╗
+     ██╔══██╗████╗  ██║████╗  ██║██╔═══██╗╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+     ███████║██╔██╗ ██║██╔██╗ ██║██║   ██║   ██║   ███████║   ██║   ██║██║   ██║██╔██╗ ██║███████╗
+     ██╔══██║██║╚██╗██║██║╚██╗██║██║   ██║   ██║   ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║╚════██║
+     ██║  ██║██║ ╚████║██║ ╚████║╚██████╔╝   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║███████║
+     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+    */
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation.isKind(of: MKUserLocation.self) {  //Handle user location annotation..
             return nil  //Default is to let the system handle it.
@@ -193,28 +227,49 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    func initializeMapView() {
+    /*
+     ██████╗  ██████╗ ██╗   ██╗████████╗██╗███╗   ██╗ ██████╗
+     ██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝██║████╗  ██║██╔════╝
+     ██████╔╝██║   ██║██║   ██║   ██║   ██║██╔██╗ ██║██║  ███╗
+     ██╔══██╗██║   ██║██║   ██║   ██║   ██║██║╚██╗██║██║   ██║
+     ██║  ██║╚██████╔╝╚██████╔╝   ██║   ██║██║ ╚████║╚██████╔╝
+     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
+    */
+    
+    
+    
+    func requestTestRoute() {
         
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
-        self.locationManager.delegate = self
+        let request = MKDirectionsRequest()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
         
-        self.mainMapView.delegate = self
-        self.mainMapView.showsUserLocation = true
         
-        //Set custom map overlay
-        let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
-        self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
         
-        //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
-        //mainMapView.setRegion(coordinateRegion, animated: true)
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.230475, longitude: -97.758380), addressDictionary: nil))
+        request.requestsAlternateRoutes = true
+        request.transportType = .automobile
         
-        loadAllVehicleAnnotations()
+        let directions = MKDirections(request: request)
         
+        directions.calculate { [unowned self] response, error in
+            guard let unwrappedResponse = response else { return }
+            
+            for route in unwrappedResponse.routes {
+                self.mainMapView.add(route.polyline)
+               // self.mainMapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+            }
+        }
     }
-
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
+        renderer.strokeColor = UIColor.blue
+        return renderer
+    }
+    
 }
 
+/*
 extension RTMainScreenViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         guard let tileOverlay = overlay as? MKTileOverlay else {
@@ -223,3 +278,4 @@ extension RTMainScreenViewController: MKMapViewDelegate {
         return MKTileOverlayRenderer(tileOverlay: tileOverlay)
     }
 }
+ */
