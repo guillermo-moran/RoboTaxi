@@ -56,7 +56,8 @@ class RTVehicleOrderController: NSObject {
         request.httpBody = postString.data(using: .utf8)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {                                                 // check for fundamental networking error
+            guard let data = data, error == nil else {
+                // check for fundamental networking error
                 print("error=\(String(describing: error))")
                 return ()
             }

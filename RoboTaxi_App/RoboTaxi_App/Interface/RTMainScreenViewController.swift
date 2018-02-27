@@ -12,8 +12,6 @@ import MapKit
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
-
-
     
     @IBOutlet weak var currentLocationBarView: UIView!
     @IBOutlet weak var profileButton: UIButton!
@@ -21,9 +19,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var requestVehicleButton: UIButton!
     
     
-    
     var locationManager = CLLocationManager()
     var userLocation = CLLocation()
+    
+    /*
+        Standard View Stuff
+    */
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -69,42 +70,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    func initializeMapView() {
-    
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
-        self.locationManager.delegate = self
-        
-        self.mainMapView.delegate = self
-        self.mainMapView.showsUserLocation = true
-        
-        //Set custom map overlay
-        let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
-        self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
-        
-        //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
-        //mainMapView.setRegion(coordinateRegion, animated: true)
-       
-        
-        
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    //locationManager Delegate
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        let location = locations.first!
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2500, 2500)
-        mainMapView.setRegion(coordinateRegion, animated: false)
-        locationManager.stopUpdatingLocation()
-    }
-    
-   
+    /*
+ 
+        Interface Actions
+     
+    */
     
     @IBAction func requestVehicle(_ sender: Any) {
         
@@ -132,16 +107,29 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         
-        /*
-        let networkController = RTNetworkController.sharedInstance
-        if (networkController.testMainServerConnection()) {
-            let alert = UIAlertController(title: "Not Available!", message: "RoboTaxi is not available yet!", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        */
+        
         
     }
+    
+    
+    /*
+ 
+        Location Stuff
+     
+    */
+    
+    //Location didUpdateLocations delegate
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let location = locations.first!
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2500, 2500)
+        mainMapView.setRegion(coordinateRegion, animated: false)
+        locationManager.stopUpdatingLocation()
+    }
+    
+   
+    
+   
     
     
      
@@ -156,6 +144,74 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    /*
+     
+     Map View Stuff
+     
+     */
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation.isKind(of: MKUserLocation.self) {  //Handle user location annotation..
+            return nil  //Default is to let the system handle it.
+        }
+        
+        if !annotation.isKind(of: RTVehicleAnnotation.self) {  //Handle non-ImageAnnotations..
+            var pinAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "DefaultPinView")
+            if pinAnnotationView == nil {
+                pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "DefaultPinView")
+            }
+            return pinAnnotationView
+        }
+        
+        //Handle ImageAnnotations..
+        var view: RTVehicleAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: "imageAnnotation") as? RTVehicleAnnotationView
+        if view == nil {
+            view = RTVehicleAnnotationView(annotation: annotation, reuseIdentifier: "imageAnnotation")
+        }
+        
+        let annotation = annotation as! RTVehicleAnnotation
+        view?.image = annotation.image
+        view?.annotation = annotation
+        
+        return view
+    }
+    
+    func loadAllVehicleAnnotations() {
+        
+        let availableVehicles = RTVehicleController.sharedInstance.returnFakeVehiclesInStEdwards()
+        
+        for vehicle in availableVehicles {
+            let annotation = RTVehicleAnnotation()
+            annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
+            annotation.image = #imageLiteral(resourceName: "vehicle_icon")
+            annotation.title = "Vehicle"
+            annotation.subtitle = "Available"
+            
+            self.mainMapView.addAnnotation(annotation)
+
+        }
+    }
+    
+    func initializeMapView() {
+        
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+        self.locationManager.delegate = self
+        
+        self.mainMapView.delegate = self
+        self.mainMapView.showsUserLocation = true
+        
+        //Set custom map overlay
+        let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
+        self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
+        
+        //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
+        //mainMapView.setRegion(coordinateRegion, animated: true)
+        
+        loadAllVehicleAnnotations()
+        
+    }
 
 }
 

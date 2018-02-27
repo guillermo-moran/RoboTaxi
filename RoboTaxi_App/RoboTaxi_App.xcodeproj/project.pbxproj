@@ -25,6 +25,9 @@
 		B3A440CD2025A9F4005DC45C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CC2025A9F4005DC45C /* Assets.xcassets */; };
 		B3A440D02025A9F4005DC45C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CE2025A9F4005DC45C /* LaunchScreen.storyboard */; };
 		B3A440DB2025A9F4005DC45C /* RoboTaxi_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */; };
+		B3F9B5362044BA9100551891 /* RTVehicleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B5352044BA9100551891 /* RTVehicleController.swift */; };
+		B3F9B53A2044BE5900551891 /* RTVehicleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B5392044BE5900551891 /* RTVehicleAnnotation.swift */; };
+		B3F9B53F2044BF1E00551891 /* RTVehicleAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B53E2044BF1E00551891 /* RTVehicleAnnotationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +63,9 @@
 		B3A440D62025A9F4005DC45C /* RoboTaxi_AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoboTaxi_AppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoboTaxi_AppTests.swift; sourceTree = "<group>"; };
 		B3A440DC2025A9F4005DC45C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3F9B5352044BA9100551891 /* RTVehicleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleController.swift; sourceTree = "<group>"; };
+		B3F9B5392044BE5900551891 /* RTVehicleAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleAnnotation.swift; sourceTree = "<group>"; };
+		B3F9B53E2044BF1E00551891 /* RTVehicleAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleAnnotationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +112,7 @@
 				B340B00B20282EB200C66128 /* KeychainTools.swift */,
 				B340B0072027C8F900C66128 /* RTNetworkController.swift */,
 				B3243AE320328D1700D0ABD3 /* RTVehicleOrderController.swift */,
+				B3F9B5352044BA9100551891 /* RTVehicleController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -113,6 +120,7 @@
 		B3243AE520328D3100D0ABD3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				B3F9B5382044BDF500551891 /* Vehicle Annotations */,
 				B3A440C72025A9F4005DC45C /* RTWelcomeViewController.swift */,
 				B32E58442026BFD0007974B9 /* RTLoginViewController.swift */,
 				B32E58462026BFE4007974B9 /* RTRegisterViewController.swift */,
@@ -171,6 +179,15 @@
 				B3A440DC2025A9F4005DC45C /* Info.plist */,
 			);
 			path = RoboTaxi_AppTests;
+			sourceTree = "<group>";
+		};
+		B3F9B5382044BDF500551891 /* Vehicle Annotations */ = {
+			isa = PBXGroup;
+			children = (
+				B3F9B5392044BE5900551891 /* RTVehicleAnnotation.swift */,
+				B3F9B53E2044BF1E00551891 /* RTVehicleAnnotationView.swift */,
+			);
+			path = "Vehicle Annotations";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,12 +295,15 @@
 			files = (
 				B32E58452026BFD0007974B9 /* RTLoginViewController.swift in Sources */,
 				B3243ADB202AF7D000D0ABD3 /* TiileOverlay.swift in Sources */,
+				B3F9B5362044BA9100551891 /* RTVehicleController.swift in Sources */,
 				B3A440C82025A9F4005DC45C /* RTWelcomeViewController.swift in Sources */,
+				B3F9B53F2044BF1E00551891 /* RTVehicleAnnotationView.swift in Sources */,
 				B3243AE420328D1700D0ABD3 /* RTVehicleOrderController.swift in Sources */,
 				B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */,
 				B3243AE12032895700D0ABD3 /* RTOrder.swift in Sources */,
 				B3A440C62025A9F4005DC45C /* AppDelegate.swift in Sources */,
 				B340B0082027C8F900C66128 /* RTNetworkController.swift in Sources */,
+				B3F9B53A2044BE5900551891 /* RTVehicleAnnotation.swift in Sources */,
 				B3243AE72032BC6200D0ABD3 /* RTVehicle.swift in Sources */,
 				B340B00C20282EB200C66128 /* KeychainTools.swift in Sources */,
 				B32E58472026BFE4007974B9 /* RTRegisterViewController.swift in Sources */,
