@@ -15,8 +15,7 @@ include('./adodb-5.20.9/adodb.inc.php');
 $db = ADONewConnection('mysql');
 $db->PConnect('localhost','meicherc_phpUser','KEvMLTly36','meicherc_dbs');
 
-$rs = $db->Execute("select vehicleID, ownerID, capacity, inService, inUse, currentLatitude, currentLongitude from WeGoVehicleDB where vehicleID = " . reset($_GET));
-
+$rs = $db->Execute("select * from WeGoVehicleDB where vehicleID = " . reset($_GET));
 
 $vehicle = new stdClass();
 
