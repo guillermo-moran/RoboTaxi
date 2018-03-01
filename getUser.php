@@ -34,7 +34,4 @@ $json = json_encode($user);
 echo $json;
 
 
-
-
-
 ?>
