@@ -9,44 +9,44 @@
 class User
 {
 
-    private $userId;
-    private $userName;
-    private $userFirstName;
-    private $userLastName;
-    private $userEmail;
-    private $userPassword;
-    private $creditCardNumber;
-    private $cardHolderName;
-    private $cardExperationDate;
-    private $ccv;
+    private $user_id;
+    private $user_name;
+    private $user_firstName;
+    private $user_lastName;
+    private $Email;
+    private $Password;
+    private $credit_card_number;
+    private $card_holder_name;
+    private $credit_expiration;
+    private $credit_ccv;
 
     /**
      * User constructor.
-     * @param $userId
-     * @param $userName
-     * @param $userFirstName
-     * @param $userLastName
-     * @param $userEmail
-     * @param $userPassword
-     * @param $creditCardNumber
-     * @param $cardHolderName
-     * @param $cardExperationDate
-     * @param $ccv
+     * @param $user_id
+     * @param $user_name
+     * @param $user_firstName
+     * @param $user_lastName
+     * @param $Email
+     * @param $Password
+     * @param $credit_card_number
+     * @param $card_holder_name
+     * @param $credit_expiration
+     * @param $credit_ccv
      */
-    public function __construct(int $userId, String $userName, String $userFirstName, String $userLastName,
-                                String $userEmail, String $userPassword,
-                                int $creditCardNumber, String $cardHolderName, int $cardExperationDate, int $ccv)
+    public function __construct(int $user_id, String $user_name, String $user_firstName, String $user_lastName,
+                                String $Email, String $Password,
+                                int $credit_card_number, String $card_holder_name, int $credit_expiration, int $credit_ccv)
     {
-        $this->userId = $userId;
-        $this->userName = $userName;
-        $this->userFirstName = $userFirstName;
-        $this->userLastName = $userLastName;
-        $this->userEmail = $userEmail;
-        $this->userPassword = $userPassword;
-        $this->creditCardNumber = $creditCardNumber;
-        $this->cardHolderName = $cardHolderName;
-        $this->cardExperationDate = $cardExperationDate;
-        $this->ccv = $ccv;
+        $this->user_id = $user_id;
+        $this->user_name = $user_name;
+        $this->user_firstName = $user_firstName;
+        $this->user_lastName = $user_lastName;
+        $this->Email = $Email;
+        $this->Password = $Password;
+        $this->credit_card_number = $credit_card_number;
+        $this->card_holder_name = $card_holder_name;
+        $this->credit_expiration = $credit_expiration;
+        $this->credit_ccv = $credit_ccv;
     }
 
     /**
@@ -54,15 +54,15 @@ class User
      */
     public function getUserId(): int
     {
-        return $this->userId;
+        return $this->user_id;
     }
 
     /**
-     * @param int $userId
+     * @param int $user_id
      */
-    public function setUserId(int $userId)
+    public function setUserId(int $user_id)
     {
-        $this->userId = $userId;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -70,15 +70,15 @@ class User
      */
     public function getUserName(): String
     {
-        return $this->userName;
+        return $this->user_name;
     }
 
     /**
-     * @param String $userName
+     * @param String $user_name
      */
-    public function setUserName(String $userName)
+    public function setUserName(String $user_name)
     {
-        $this->userName = $userName;
+        $this->user_name = $user_name;
     }
 
     /**
@@ -86,15 +86,15 @@ class User
      */
     public function getUserFirstName(): String
     {
-        return $this->userFirstName;
+        return $this->user_firstName;
     }
 
     /**
-     * @param String $userFirstName
+     * @param String $user_firstName
      */
-    public function setUserFirstName(String $userFirstName)
+    public function setUserFirstName(String $user_firstName)
     {
-        $this->userFirstName = $userFirstName;
+        $this->user_firstName = $user_firstName;
     }
 
     /**
@@ -102,15 +102,15 @@ class User
      */
     public function getUserLastName(): String
     {
-        return $this->userLastName;
+        return $this->user_lastName;
     }
 
     /**
-     * @param String $userLastName
+     * @param String $user_lastName
      */
-    public function setUserLastName(String $userLastName)
+    public function setUserLastName(String $user_lastName)
     {
-        $this->userLastName = $userLastName;
+        $this->user_lastName = $user_lastName;
     }
 
     /**
@@ -118,15 +118,15 @@ class User
      */
     public function getUserEmail(): String
     {
-        return $this->userEmail;
+        return $this->Email;
     }
 
     /**
-     * @param String $userEmail
+     * @param String $Email
      */
-    public function setUserEmail(String $userEmail)
+    public function setUserEmail(String $Email)
     {
-        $this->userEmail = $userEmail;
+        $this->Email = $Email;
     }
 
     /**
@@ -134,15 +134,15 @@ class User
      */
     public function getUserPassword(): String
     {
-        return $this->userPassword;
+        return $this->Password;
     }
 
     /**
-     * @param String $userPassword
+     * @param String $Password
      */
-    public function setUserPassword(String $userPassword)
+    public function setUserPassword(String $Password)
     {
-        $this->userPassword = $userPassword;
+        $this->Password = $Password;
     }
 
     /**
@@ -150,15 +150,15 @@ class User
      */
     public function getCreditCardNumber(): int
     {
-        return $this->creditCardNumber;
+        return $this->credit_card_number;
     }
 
     /**
-     * @param int $creditCardNumber
+     * @param int $credit_card_number
      */
-    public function setCreditCardNumber(int $creditCardNumber)
+    public function setCreditCardNumber(int $credit_card_number)
     {
-        $this->creditCardNumber = $creditCardNumber;
+        $this->credit_card_number = $credit_card_number;
     }
 
     /**
@@ -166,15 +166,15 @@ class User
      */
     public function getCardHolderName(): String
     {
-        return $this->cardHolderName;
+        return $this->card_holder_name;
     }
 
     /**
-     * @param String $cardHolderName
+     * @param String $card_holder_name
      */
-    public function setCardHolderName(String $cardHolderName)
+    public function setCardHolderName(String $card_holder_name)
     {
-        $this->cardHolderName = $cardHolderName;
+        $this->card_holder_name = $card_holder_name;
     }
 
     /**
@@ -182,15 +182,15 @@ class User
      */
     public function getCardExperationDate(): int
     {
-        return $this->cardExperationDate;
+        return $this->credit_expiration;
     }
 
     /**
-     * @param int $cardExperationDate
+     * @param int $credit_expiration
      */
-    public function setCardExperationDate(int $cardExperationDate)
+    public function setCardExperationDate(int $credit_expiration)
     {
-        $this->cardExperationDate = $cardExperationDate;
+        $this->credit_expiration = $credit_expiration;
     }
 
     /**
@@ -198,15 +198,15 @@ class User
      */
     public function getCcv(): int
     {
-        return $this->ccv;
+        return $this->credit_ccv;
     }
 
     /**
-     * @param int $ccv
+     * @param int $credit_ccv
      */
-    public function setCcv(int $ccv)
+    public function setCcv(int $credit_ccv)
     {
-        $this->ccv = $ccv;
+        $this->credit_ccv = $credit_ccv;
     }
 
 
