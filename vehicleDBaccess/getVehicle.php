@@ -6,10 +6,6 @@
  * Time: 16:10
  */
 
-// For debugging purposes
-//var_dump($_GET);
-//var_dump($_POST);
-
 include('./adodb-5.20.9/adodb.inc.php');
 
 $db = ADONewConnection('mysql');
