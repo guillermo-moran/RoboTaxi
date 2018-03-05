@@ -23,26 +23,24 @@ class userRepository
 
     {
 
-        //We want to make sure to mitigate SQL injection attacks!
+
         $user_id = user::scrubQuery($user_id);
-        //get the raw data from the database
         $rawUserDatum = user::runQuerySingle("SELECT * FROM user WHERE userId='$user_id'");
-        //our Database class will give us a one dimensional array with the result of our query, or an empty array
-        //the keys of the array will be the selected columns, in our case all columns
-        //now let's make sure we actually got something back
         if ($rawUserDatum) {
             $returnUser = new stdClass();
             return new User($rawUserDatum['user_id'], $rawUserDatum['$user_name'], $rawUserDatum['$user_firstName'], $rawUserDatum['$user_lastName'], $rawUserDatum['$Email'], $rawUserDatum['$Password'], $rawUserDatum['$credit_card_number'], $rawUserDatum['$card_holder_name'], $rawUserDatum['$credit_expiration'], $rawUserDatum['$credit_ccv']);
-            $returnUser -> user_id = $rawUserDatum['$user_id'];
-            $returnUser -> user_name = $rawUserDatum['$user_name'];
-            $returnUser -> user_firstName = $rawUserDatum['$user_firstName'];
-            $returnUser -> user_lastName = $rawUserDatum['$user_lastName'];
-            $returnUser -> Email = $rawUserDatum['$Email'];
-            $returnUser -> Password = $rawUserDatum['$Password'];
-            $returnUser -> credit_card_number = $rawUserDatum['$credit_card_number'];
-            $returnUser -> card_holder_name = $rawUserDatum['$card_holder_name'];
-            $returnUser -> credit_expiration = $rawUserDatum['$credit_expiration'];
-            $returnUser -> credit_ccv = $rawUserDatum['$credit_ccv'];
+
+
+            $returnUser -> user_id              = $rawUserDatum['$user_id'];
+            $returnUser -> user_name            = $rawUserDatum['$user_name'];
+            $returnUser -> user_firstName       = $rawUserDatum['$user_firstName'];
+            $returnUser -> user_lastName        = $rawUserDatum['$user_lastName'];
+            $returnUser -> Email                = $rawUserDatum['$Email'];
+            $returnUser -> Password             = $rawUserDatum['$Password'];
+            $returnUser -> credit_card_number   = $rawUserDatum['$credit_card_number'];
+            $returnUser -> card_holder_name     = $rawUserDatum['$card_holder_name'];
+            $returnUser -> credit_expiration    = $rawUserDatum['$credit_expiration'];
+            $returnUser -> credit_ccv           = $rawUserDatum['$credit_ccv'];
 
 
             $myJSON = json_encode($returnUser);
@@ -55,13 +53,12 @@ class userRepository
         return null;
 
     }
-
     /**
      * @param $user_name
      * @param $Password
      * @return bool|user
      */
-    public static function authenticatUserId($user_name, $Password)
+    public static function authenticatUserId($user_name, $password)
     {
         $query = "Select * from user where user_name = '$user_name and Password = '$password";
         $ruselt = mysqli_query($this->connection, $query);
@@ -73,7 +70,7 @@ class userRepository
         }
 
         else {
-            $query = "Inser into user($user_name, $Password) values ('$user_name', '$Password')";
+            $query = "Inser into user($user_name, $password) values ('$user_name', '$password')";
             $is_inserted = mysqli_query($this->connection, $query);
             if ($is_inserted == 1){
                 $json['success'] = 'Account created, Welcome' .$user_name;
@@ -88,14 +85,14 @@ class userRepository
 
 
         $user = new User();
-        if ( isset($_POST['user_name'],$_POST['Password'])){
+        if ( isset($_POST['user_name'],$_POST['password'])){
             $user_name = $_POST['$user_name'];
-            $Password = $_POST['Password'];
+            $password = $_POST['password'];
 
-            if (!empty('$user_name') && !empty('$Password')){
+            if (!empty('$user_name') && !empty('$password')){
 
-                $encrypted_Password = md5($Password);
-                $user -> does_user_exist($user_name,$encrypted_Password);
+                $encrypted_password = md5($password);
+                $user -> does_user_exist($user_name,$encrypted_password);
             }
             else{
 
@@ -106,3 +103,4 @@ class userRepository
 
     }
 }
+?>
