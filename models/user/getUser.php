@@ -25,7 +25,7 @@ $user -> user_firstName = $result['user_firstName']."<br>";
 
 $user -> user_lastName = $result['user_lastName']."<br>";
 
-$user -> Email = $result['Email']."<br>";
+$user -> Email = $result['email']."<br>";
 
 $user -> password = $result['password']."<br>";
 

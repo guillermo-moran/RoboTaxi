@@ -16,7 +16,7 @@ class User
     private $email;
     private $password;
     private $credit_card_number;
-    private $credit_card_username;
+    private $card_holder_name;
     private $credit_expiration;
     private $credit_ccv;
 
@@ -29,13 +29,13 @@ class User
      * @param $email
      * @param $password
      * @param $credit_card_number
-     * @param $credit_card_username
+     * @param $card_holder_name
      * @param $credit_expiration
      * @param $credit_ccv
      */
     public function __construct(int $user_id, String $user_name, String $user_firstName, String $user_lastName,
                                 String $email, String $password,
-                                int $credit_card_number, String $credit_card_username, int $credit_expiration, int $credit_ccv)
+                                int $credit_card_number, String $card_holder_name, int $credit_expiration, int $credit_ccv)
     {
         $this->user_id = $user_id;
         $this->user_name = $user_name;
@@ -44,7 +44,7 @@ class User
         $this->email = $email;
         $this->password = $password;
         $this->credit_card_number = $credit_card_number;
-        $this->credit_card_username = $credit_card_username;
+        $this->card_holder_name = $card_holder_name;
         $this->credit_expiration = $credit_expiration;
         $this->credit_ccv = $credit_ccv;
     }
@@ -166,15 +166,15 @@ class User
      */
     public function getCardHolderName()
     {
-        return $this->credit_card_username;
+        return $this->card_holder_name;
     }
 
     /**
      * @param String credit_card_username
      */
-    public function setCardHolderName(String $credit_card_username)
+    public function setCardHolderName(String $card_holder_name)
     {
-        $this->credit_card_username = $credit_card_username;
+        $this->card_holder_name = $card_holder_name;
     }
 
     /**
