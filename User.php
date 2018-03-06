@@ -13,8 +13,8 @@ class User
     private $user_name;
     private $user_firstName;
     private $user_lastName;
-    private $Email;
-    private $Password;
+    private $email;
+    private $password;
     private $credit_card_number;
     private $card_holder_name;
     private $credit_expiration;
@@ -41,8 +41,8 @@ class User
         $this->user_name = $user_name;
         $this->user_firstName = $user_firstName;
         $this->user_lastName = $user_lastName;
-        $this->Email = $Email;
-        $this->Password = $Password;
+        $this->email = $Email;
+        $this->password = $Password;
         $this->credit_card_number = $credit_card_number;
         $this->card_holder_name = $card_holder_name;
         $this->credit_expiration = $credit_expiration;
@@ -118,7 +118,7 @@ class User
      */
     public function getUserEmail(): String
     {
-        return $this->Email;
+        return $this->email;
     }
 
     /**
@@ -126,7 +126,7 @@ class User
      */
     public function setUserEmail(String $Email)
     {
-        $this->Email = $Email;
+        $this->email = $Email;
     }
 
     /**
@@ -134,7 +134,7 @@ class User
      */
     public function getUserPassword(): String
     {
-        return $this->Password;
+        return $this->password;
     }
 
     /**
@@ -142,7 +142,7 @@ class User
      */
     public function setUserPassword(String $Password)
     {
-        $this->Password = $Password;
+        $this->password = $Password;
     }
 
     /**

@@ -1,15 +1,15 @@
 <?php
 /**
  * Created by IntelliJ IDEA.
- * User: Abo-norah91
+ * User: Mohammed Alkhudhayr
  * Date: 2/24/18
  * Time: 9:57 PM
  */
 
 
 ##The Response library makes it very easy to encapsulate data in a tertiary structure to build the json string more easily
-require_once __DIR__ . "/../../user/Response.php";
-require_once __DIR__ . "/../user/userRepository.php";
+require_once __DIR__ . "/Response.php";
+require_once __DIR__ . "/userRepository.php";
 
 $response = new Response();
 $method = filter_var($_SERVER['REQUEST_METHOD'], FILTER_SANITIZE_STRING);
@@ -17,7 +17,7 @@ $method = filter_var($_SERVER['REQUEST_METHOD'], FILTER_SANITIZE_STRING);
 switch ($method) {
     case 'GET':
         if (isset($_GET['user_id'])) {
-            $user_id = filter_var($_GET['coffee_id'], FILTER_SANITIZE_STRING);
+            $user_id = filter_var($_GET['user_id'], FILTER_SANITIZE_STRING);
             $user = userRepository::getUserById($user_id);
             $response->pushData($user);
             http_response_code(200);
