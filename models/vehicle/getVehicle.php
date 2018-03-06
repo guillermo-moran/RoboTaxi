@@ -4,6 +4,8 @@
  * User: Marcus Eicher
  * Date: 24.02.2018
  * Time: 16:10
+ *
+ * Actual functional PHP getVehicle
  */
 
 include('./adodb-5.20.9/adodb.inc.php');
