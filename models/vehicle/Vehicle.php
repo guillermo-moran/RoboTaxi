@@ -58,12 +58,15 @@ class Vehicle
         return $this -> inUse;
     }
 
-    public function getVehicleCurrentLocation() : array
+    public function getVehicleCurrentLatitude() : float
     {
-        $tmp = array($this->currentLatitude, $this->currentLongitude);
-        return $tmp;
+        return $this->currentLatitude;
     }
 
+    public function getVehicleCurrentLongitude() : float
+    {
+        return $this->currentLongitude;
+    }
 
     //set functions
     public function setVehicleID(Int $newVehicleID)
@@ -91,9 +94,13 @@ class Vehicle
         $this -> inUse = $newStatus;
     }
 
-    public function setVehicleCurrentLocation(float $newLongitude, float $newLatitude)
+    public function setVehicleCurrentLatitude(float $newLatitude)
+    {
+        $this -> currentLatitude = $newLatitude;
+    }
+
+    public function setVehicleCurrentLongitude(float $newLongitude)
     {
         $this -> currentLongitude = $newLongitude;
-        $this -> currentLatitude = $newLatitude;
     }
 }
