@@ -7,6 +7,9 @@
  *
  * Actual functional PHP getVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
+ *
+ * Usage:   getVehicle.php?vehicleID=1
+ *          returns JSON with all vehicle data and HTTP code 202 if successful, 404 if ID is not found in database
  */
 
 $db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
@@ -23,6 +26,9 @@ $vehicle -> currentLatitude     = $rs['currentLatitude'];
 $vehicle -> currentLongitude    = $rs['currentLongitude'];
 
 $json = json_encode($vehicle);
-echo $json;
+print $json;
+
+if ($vehicle -> vehicleID == null) http_response_code(404);
+else http_response_code(202);
 
 ?>
