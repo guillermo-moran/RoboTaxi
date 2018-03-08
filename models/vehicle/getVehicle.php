@@ -39,4 +39,5 @@ else
     print $json;
 }
 
+$db -> close();
 ?>

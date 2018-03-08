@@ -18,9 +18,6 @@
  * TODO:    TJ's scrubQuery does not work (syntax error)
  */
 
-//For debugging purposes
-//var_dump($_GET);
-
 $db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
 
 
@@ -70,4 +67,6 @@ else
         print "ERROR: Missing parameters!";
     }
 }
+
+$db -> close();
 ?>
