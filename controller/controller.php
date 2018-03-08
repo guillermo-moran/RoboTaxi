@@ -60,11 +60,28 @@ function getJSONUser(
     return $obj;
 }
 
+//@Pre: vehicle is in database
+//@Post: vehicleID
+function getJSONVehicle(){
+    // random vehicle ID for now
+    $randVehicle = getRandomVehicle();
+    $json = file_get_contents('http://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=' . $randVehicle .'');
+    $obj = json_decode($json);
+    echo $obj->access_token;
+    return $obj;
+}
+
 /*
 _  _ ____ ____ ____    ___  ____ ___ ____    ____ ____ _  _ ___ ____ ____ _
 |  | [__  |___ |__/    |  \ |__|  |  |__|    |    |  | |\ |  |  |__/ |  | |
 |__| ___] |___ |  \    |__/ |  |  |  |  |    |___ |__| | \|  |  |  \ |__| |___
 */
+
+
+private function getRandomVehicle(){
+    $vehicleID = rand(0,5);
+    return $vehicleID;
+}
 
 /*
  * Parse
@@ -91,6 +108,16 @@ $user_password = $user['password'];
 //$user_destLat = $user[''];
 //$user_email = $user['email'];
 //$user_
+
+/*
+         _   _     _                    _           _
+ _ _ ___| |_|_|___| |___    ___ ___ ___| |_ ___ ___| |
+| | | -_|   | |  _| | -_|  |  _| . |   |  _|  _| . | |
+ \_/|___|_|_|_|___|_|___|  |___|___|_|_|_| |_| |___|_|
+*/
+$vehicle = getJSONVehicle();
+// grab vehicle info from the string
+$vehicle_vehicleID = $vehicle['vehicleID'];
 
 /*
 _                             _             _
