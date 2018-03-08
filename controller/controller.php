@@ -33,10 +33,6 @@ function DBConnector($serverName,$username,$password,$dbName){
 
 
 
-
-
-
-
 //@Pre:
 //@Post:
 function getHTTPOrderRequestFromSwift(){
