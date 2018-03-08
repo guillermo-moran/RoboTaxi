@@ -4,6 +4,32 @@
  * User: Marcus Eicher
  * Date: 12.02.2018
  * Time: 15:36
+ *
+ * Data layer
+ * https://tchallst.create.stedwards.edu/delorean/topics/dataLayer.php
+ */
+
+
+/**
+public static function getVehicleByID(int $vehicleID) : vehicle
+{
+$vehicleID = Database::scrubQuery($coffee_id);
+$tmp = Database::runQuerySingle("SELECT * FROM WeGoVehicleDB WHERE vehicleID='$vehicleID'");
+if ($tmp) return new vehicle($tmp['vehicleID'], $tmp['$ownerID'], $tmp['$capacity'], $tmp['$inService'], $tmp['$inUse'], $tmp['$currentLatitude'], $tmp['$currentLongitude']);
+}
+
+
+public static function updateVehicle($newVehicle) : bool
+{
+$vehicleID = $newVehicle->getVehicleID();
+$ownerID = $newVehicle->getVehicleOwnerID();
+$capacity = $newVehicle->getVehicleCapacity();
+$inService = $newVehicle->getVehicleAvailability();
+$inUse = $newVehicle->getVehicleBusyStatus();
+
+$currentLatitude = $newVehicle->getVehicleCurrentLatitude();
+$currentLongitude = $newVehicle->getVehicleCurrentLongitude();
+}
  */
 
 class Vehicle
@@ -53,12 +79,15 @@ class Vehicle
         return $this -> inUse;
     }
 
-    public function getVehicleCurrentLocation() : array
+    public function getVehicleCurrentLatitude() : float
     {
-        $tmp = array($this->currentLatitude, $this->currentLongitude);
-        return $tmp;
+        return $this->currentLatitude;
     }
 
+    public function getVehicleCurrentLongitude() : float
+    {
+        return $this->currentLongitude;
+    }
 
     //set functions
     public function setVehicleID(Int $newVehicleID)
@@ -86,9 +115,13 @@ class Vehicle
         $this -> inUse = $newStatus;
     }
 
-    public function setVehicleCurrentLocation(float $newLongitude, float $newLatitude)
+    public function setVehicleCurrentLatitude(float $newLatitude)
+    {
+        $this -> currentLatitude = $newLatitude;
+    }
+
+    public function setVehicleCurrentLongitude(float $newLongitude)
     {
         $this -> currentLongitude = $newLongitude;
-        $this -> currentLatitude = $newLatitude;
     }
 }
