@@ -13,7 +13,7 @@
  */
 
 $db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
-$rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . reset($_GET) )->fetch_assoc();
+$rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
 $vehicle = new stdClass();
 
