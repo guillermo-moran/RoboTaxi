@@ -12,6 +12,10 @@
  *          returns JSON with all vehicle data and HTTP code 202 if successful, 404 if ID is not found in database
  */
 
+/**
+ * TODO:    - nothing at the moment
+ */
+
 $db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
 $rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
