@@ -11,12 +11,11 @@
  * Usage:   setVehicle.php?vehicleID=1&ownerID=1&capacity=4&inService=1&inUse=1&currentLatitude=-11.11111111&currentLongitude=-11.11111111
  *          All parameters must be given to update vehicle, will not execute otherwise
  *          HTTP 202 & "SUCCESS" : Database was updated, otherwise it does HTTP 404 or 400 and an error message
- *          currentLatitude & currentLongitude is not float, but a decimal(10,8)
+ *          currentLatitude & currentLongitude is not float, but a decimal(10,8) in the database
  */
 
 /**
- * TODO:    - TJ's scrubQuery does not work (syntax error)
- *          - latitude & longitude gets truncated after 6 characters (serious!)
+ * TODO:    TJ's scrubQuery does not work (syntax error)
  */
 
 //For debugging purposes

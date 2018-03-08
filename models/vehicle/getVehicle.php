@@ -12,10 +12,6 @@
  *          returns JSON with all vehicle data and HTTP code 202 if successful, 404 if ID is not found in database
  */
 
-/**
- * TODO:    - nothing at the moment
- */
-
 $db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
 $rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
@@ -30,9 +26,17 @@ $vehicle -> currentLatitude     = $rs['currentLatitude'];
 $vehicle -> currentLongitude    = $rs['currentLongitude'];
 
 $json = json_encode($vehicle);
-print $json;
 
-if ($vehicle -> vehicleID == null) http_response_code(404);
-else http_response_code(202);
+
+if ($vehicle -> vehicleID == null)
+{
+    http_response_code(404);
+    print "ERROR: vehicleID not in database!";
+}
+else
+{
+    http_response_code(202);
+    print $json;
+}
 
 ?>
