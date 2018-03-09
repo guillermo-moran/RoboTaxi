@@ -127,7 +127,28 @@ _                             _             _
  \___/|_|  \__,_|\___|_|     \___\___/|_| |_|\__|_|  \___/|_|
 */
 
+function createOrderWithUserIDVehicleID(
+    $user_userID, $vehicle_vehicleID
+){
+    // sends cURL $_POST request to shaker's server
+    // Get cURL resource
+    $curl = curl_init();
+    // Set some options - we are passing in a user agent too here
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'SHAKERS URL',
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => array(
+            userId => $user_userID,
+            vehicleId => $vehicle_vehicleID
+        )
+    ));
+    // Send the request & save response to $resp
+    $resp = curl_exec($curl);
+    // Close request to clear up some resources
+    curl_close($curl);
 
+}
 
 
 
