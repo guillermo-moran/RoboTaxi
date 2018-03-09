@@ -62,10 +62,11 @@ function getJSONUser(
 
 //@Pre: vehicle is in database
 //@Post: vehicleID
-function getJSONVehicle(){
+function getJSONVehicle()
+{
     // random vehicle ID for now
     $randVehicle = getRandomVehicle();
-    $json = file_get_contents('http://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=' . $randVehicle .'');
+    $json = file_get_contents('http://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=' . $randVehicle);
     $obj = json_decode($json);
     echo $obj->access_token;
     return $obj;
@@ -77,12 +78,10 @@ _  _ ____ ____ ____    ___  ____ ___ ____    ____ ____ _  _ ___ ____ ____ _
 |__| ___] |___ |  \    |__/ |  |  |  |  |    |___ |__| | \|  |  |  \ |__| |___
 */
 
-
-private function getRandomVehicle(){
+function getRandomVehicle(){
     $vehicleID = rand(0,5);
     return $vehicleID;
 }
-
 /*
  * Parse
  */
