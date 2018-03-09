@@ -1,5 +1,10 @@
 <?php
 
+// re-purpose this code into authentication.php
+ // remember to change server access permissions in RtNetworkController.swift
+
+
+
 $userID  			= $_POST["user_id"];
 $userPass 			= $_POST["user_pass"];
 $userLocationLong 	= $_POST["user_longitude"];

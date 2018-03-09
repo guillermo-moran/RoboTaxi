@@ -126,6 +126,13 @@ _                             _             _
  \___/|_|  \__,_|\___|_|     \___\___/|_| |_|\__|_|  \___/|_|
 */
 
+
+$order = createOrderWithUserIDVehicleID(
+    // $user_userID,
+    // $vehicle_vehicleID
+
+);
+
 function createOrderWithUserIDVehicleID(
     $user_userID, $vehicle_vehicleID
 ){
@@ -135,7 +142,7 @@ function createOrderWithUserIDVehicleID(
     // Set some options - we are passing in a user agent too here
     curl_setopt_array($curl, array(
         CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_URL => 'SHAKERS URL',
+        CURLOPT_URL => '...setOrder.php',
         CURLOPT_POST => 1,
         CURLOPT_POSTFIELDS => array(
             userId => $user_userID,
