@@ -7,6 +7,8 @@
  *
  * Data layer
  * https://tchallst.create.stedwards.edu/delorean/topics/dataLayer.php
+ *
+ * Useless file, might be deleted later on
  */
 
 

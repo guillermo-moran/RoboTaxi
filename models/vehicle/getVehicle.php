@@ -26,9 +26,18 @@ $vehicle -> currentLatitude     = $rs['currentLatitude'];
 $vehicle -> currentLongitude    = $rs['currentLongitude'];
 
 $json = json_encode($vehicle);
-print $json;
 
-if ($vehicle -> vehicleID == null) http_response_code(404);
-else http_response_code(202);
 
+if ($vehicle -> vehicleID == null)
+{
+    http_response_code(404);
+    print "ERROR: vehicleID not in database!";
+}
+else
+{
+    http_response_code(202);
+    print $json;
+}
+
+$db -> close();
 ?>
