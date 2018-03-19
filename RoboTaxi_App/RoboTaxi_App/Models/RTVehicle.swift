@@ -34,14 +34,18 @@ class RTVehicle: NSObject {
     
     init(vehicleID : Int, ownerID : Int, capacity : Int, inService : Bool, inUse : Bool, currentLatitude : Double, currentLongitude : Double) {
         
-        self.vehicleID = vehicleID
-        self.ownerID = ownerID
-        self.capacity = capacity
-        self.inService = inService
-        self.inUse = inUse
-        self.currentLatitude = currentLatitude
-        self.currentLongitude = currentLongitude
+        self.vehicleID          = vehicleID
+        self.ownerID            = ownerID
+        self.capacity           = capacity
+        self.inService          = inService
+        self.inUse              = inUse
+        self.currentLatitude    = currentLatitude
+        self.currentLongitude   = currentLongitude
         
+    }
+    
+    func getVehicleID() -> Int {
+        return self.vehicleID
     }
     
     func getCurrentLatitude() -> Double {

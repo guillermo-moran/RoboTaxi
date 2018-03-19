@@ -12,7 +12,7 @@ class RTOrder: NSObject {
     
     private var order_id : Int
     private var user_id : Int
-    private var vehicle_id : Int
+    private var vehicle : RTVehicle
     private var orderDate : String
     private var startLatitude : Double
     private var startLongitude : Double
@@ -22,7 +22,7 @@ class RTOrder: NSObject {
     override init() {
         self.order_id       = -1
         self.user_id        = -1
-        self.vehicle_id     = -1
+        self.vehicle        = RTVehicle()
         self.orderDate      = "N/A"
         self.startLatitude  = 0.0
         self.startLongitude = 0.0
@@ -33,11 +33,11 @@ class RTOrder: NSObject {
         super.init()
     }
     
-    init(order_id : Int, user_id : Int, vehicle_id : Int, orderDate : String, startLatitude : Double, startLongitude : Double, endLatitude : Double, endLongitude : Double) {
+    init(order_id : Int, user_id : Int, vehicle : RTVehicle, orderDate : String, startLatitude : Double, startLongitude : Double, endLatitude : Double, endLongitude : Double) {
         
         self.order_id       = order_id
         self.user_id        = user_id
-        self.vehicle_id     = vehicle_id
+        self.vehicle     = vehicle
         self.orderDate      = orderDate
         self.startLatitude  = startLatitude
         self.startLongitude = startLongitude
@@ -59,8 +59,8 @@ class RTOrder: NSObject {
         return self.user_id
     }
     
-    func getVehicleID() -> Int {
-        return self.vehicle_id
+    func getVehicle() -> RTVehicle {
+        return self.vehicle
     }
     
     func getOrderDate() -> String {
@@ -93,8 +93,8 @@ class RTOrder: NSObject {
         self.user_id = userID
     }
     
-    func setVehicleID(vehicleID : Int) {
-        self.vehicle_id = vehicleID
+    func setVehicle(vehicle : RTVehicle) {
+        self.vehicle = vehicle
     }
     
     func setOrderDate(date : String) {
