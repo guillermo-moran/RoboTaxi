@@ -45,13 +45,15 @@ class RTVehicleOrderController: NSObject {
         //Lets make up values for testing purposes. We'll fill these values in appropriately at a later date
         let userName = "user"
         let userPass = "password"
-        let userLocationLong = 0.0
-        let userLocationLat = 0.0
-        let destinationLong = 0.0
-        let destinationLat = 0.0
+        let userLocationLong = 1.0
+        let userLocationLat = 1.0
+        let destinationLong = 1.0
+        let destinationLat = 1.0
         let userDate = "Today"
         
-        let postString = "user_name=\(userName)&user_pass=\(userPass)&latitude=\(userLocationLat)&longitude=\(userLocationLong)&date=\(userDate)&dest_lat=\(destinationLat)&dest_long=\(destinationLong)"
+        let requestType = "ORDER"; // "ORDER" is the type to request a trip/vehicle from the server
+        
+        let postString = "user_name=\(userName)&user_pass=\(userPass)&user_latitude=\(userLocationLat)&user_longitude=\(userLocationLong)&date=\(userDate)&dest_lat=\(destinationLat)&dest_long=\(destinationLong)&request_type=\(requestType)"
         
         request.httpBody = postString.data(using: .utf8)
         

@@ -2,24 +2,64 @@
 
 $userName  			= $_POST["user_name"];
 $userPass 			= $_POST["user_pass"];
+
 $userLocationLong 	= $_POST["user_longitude"];
 $userLocationLat 	= $_POST["user_latitude"];
 $destinationLong	= $_POST["dest_long"];
 $destinationLat		= $_POST["dest_lat"];
 $userDate			= $_POST["date"];
 
+$requestType 		= $_POST["request_type"];
+
+function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType) {
+
+	if (isset($requestType)) {
+
+		if ($requestType === "ORDER") {
+
+			if (!isset($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLat, $destinationLong, $userDate)) {
+				returnStatus("Parameters not set!1");
+				return;
+			}
+
+			createNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+			return;
+		}
+		if ($requestType === "AUTHENTICATE") {
+
+
+			if (!isset($userName, $userPass)) {
+				returnStatus("Parameters not set!2");
+				return;
+			}
+
+
+			verifyUserCredentials($userName, $userPass);
+			return;
+		}
+
+		if ($requestType === "PING") {
+			returnStatus("PONG");
+		}
+
+		returnStatus("Invalid request type");
+	}
+	else {
+		returnStatus("Invalid request type");
+	}
+
+}
+
 
 
 function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
 
 	//JSON Example
-	$newOrder = new stdClass();
+
 	$isAuthenticated = verifyUserCredentials($user_name, $user_password);
 
 	if (!$isAuthenticated) {
-		$newOrder->status = "Failure";
-		$myJSON = json_encode($newOrder);
-		echo $myJSON;
+		returnStatus("User not authenticated!");
 		return;
 	}
 
@@ -79,6 +119,13 @@ function verifyUserCredentials($user_name, $user_password) {
 	}
 }
 
-createNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+function returnStatus($message) {
+	$hype = new stdClass();
+	$hype->status = $message;
+	$myJSON = json_encode($hype);
+	echo $myJSON;
+}
+
+main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType);
 
 ?>

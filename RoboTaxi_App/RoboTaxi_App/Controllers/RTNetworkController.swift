@@ -11,7 +11,8 @@ import UIKit
 class RTNetworkController: NSObject {
     
     static let sharedInstance = RTNetworkController()
-    static let serverAddress  = "http://gmoran.create.stedwards.edu/RoboTaxi/OrderTest2.php"
+    
+    static let serverAddress  = "http://gmoran.create.stedwards.edu/RoboTaxi/testServer.php"
     
     private var loggedIn : Bool
     
