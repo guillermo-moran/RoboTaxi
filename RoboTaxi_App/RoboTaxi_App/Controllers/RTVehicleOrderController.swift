@@ -10,7 +10,7 @@ import UIKit
 
 class RTVehicleOrderController: NSObject {
     
-    private var newOrder : RTOrder = RTOrder()
+    //private var newOrder : RTOrder = RTOrder()
     
     static let sharedInstance = RTVehicleOrderController()
     
@@ -43,7 +43,7 @@ class RTVehicleOrderController: NSObject {
         */
         
         //Lets make up values for testing purposes. We'll fill these values in appropriately at a later date
-        let userID = 0
+        let userName = "user"
         let userPass = "password"
         let userLocationLong = 0.0
         let userLocationLat = 0.0
@@ -51,9 +51,11 @@ class RTVehicleOrderController: NSObject {
         let destinationLat = 0.0
         let userDate = "Today"
         
-        let postString = "user_id=\(userID)&user_pass=\(userPass)&latitude=\(userLocationLat)&longitude=\(userLocationLong)&date=\(userDate)&dest_lat=\(destinationLat)&dest_long=\(destinationLong)"
+        let postString = "user_name=\(userName)&user_pass=\(userPass)&latitude=\(userLocationLat)&longitude=\(userLocationLong)&date=\(userDate)&dest_lat=\(destinationLat)&dest_long=\(destinationLong)"
         
         request.httpBody = postString.data(using: .utf8)
+        
+        let newOrder = RTOrder()
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
@@ -94,7 +96,7 @@ class RTVehicleOrderController: NSObject {
                 
                 let user_id = json["user_id"] as! Int
                 let order_id = json["order_id"] as! Int
-                let vehicle_id = json["vehicle_id"] as! Int
+                let vehicle_dict = json["vehicle"] as! NSDictionary
                 let orderDate = json["orderDate"] as! String
                 let start_lat = json["start_lat"] as! Double
                 let start_long = json["start_long"] as! Double
@@ -103,14 +105,27 @@ class RTVehicleOrderController: NSObject {
                 
                 //let newOrder = RTOrder(order_id: order_id, user_id: user_id, vehicle_id: vehicle_id, orderDate: orderDate, startLatitude: start_lat, startLongitude: start_long, endLatitude: end_lat, endLongitude: end_long)
                 
-                self.newOrder.setOrderID(orderID: order_id)
-                self.newOrder.setUserID(userID: user_id)
-                self.newOrder.setVehicleID(vehicleID: vehicle_id)
-                self.newOrder.setOrderDate(date: orderDate)
-                self.newOrder.setStartLatitude(lat: start_lat)
-                self.newOrder.setStartLongitude(long: start_long)
-                self.newOrder.setEndLatitude(lat: end_lat)
-                self.newOrder.setEndLongitude(long: end_long)
+                let vehicleID = Int(vehicle_dict["vehicleID"] as! String)
+                let ownerID = Int(vehicle_dict["ownerID"] as! String)
+                let inUse = NSNumber(value: Int(vehicle_dict["inUse"] as! String)!)
+                let inService = NSNumber(value: Int(vehicle_dict["inService"] as! String)!)
+                let currentLongitude = Double(vehicle_dict["currentLongitude"] as! String)
+                let currentLatitude = Double(vehicle_dict["currentLatitude"] as! String)
+                let capacity = Int(vehicle_dict["capacity"] as! String)
+                
+                let requested_vehicle = RTVehicle(vehicleID: vehicleID!, ownerID: ownerID!, capacity: capacity!, inService: inService as! Bool, inUse: inUse as! Bool, currentLatitude: currentLatitude!, currentLongitude: currentLongitude!)
+                
+                //newOrder.setVehicle(vehicle: requested_vehicle)
+                
+                newOrder.setOrderID(orderID: order_id)
+                newOrder.setUserID(userID: user_id)
+                newOrder.setVehicle(vehicle: requested_vehicle)
+                newOrder.setOrderDate(date: orderDate)
+                newOrder.setStartLatitude(lat: start_lat)
+                newOrder.setStartLongitude(long: start_long)
+                newOrder.setEndLatitude(lat: end_lat)
+                newOrder.setEndLongitude(long: end_long)
+                
                 
                 //Signal semaphore after finishing
                 sem.signal()
@@ -126,9 +141,9 @@ class RTVehicleOrderController: NSObject {
         // which will be once the data task has completed
         sem.wait(timeout: .distantFuture)
         
-        print (self.newOrder.getOrderID())
+        print (newOrder.getOrderID())
         
-        return self.newOrder
+        return newOrder
         
     }
     

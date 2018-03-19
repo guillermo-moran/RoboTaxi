@@ -108,10 +108,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         }
         
         let order_id = newOrder.getOrderID()
-        let vehicle_id = newOrder.getVehicleID()
+        let vehicle = newOrder.getVehicle()
         let orderDate = newOrder.getOrderDate()
         
-        let alert = UIAlertController(title: "Order Created!", message: "The following order has been created: \n Order ID : \(order_id) \n Vehicle ID : \(vehicle_id) \n Order Date : \(orderDate)", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Order Created!", message: "The following order has been created: \n Order ID : \(order_id) \n Vehicle ID : \(vehicle.getVehicleID()) \n Order Date : \(orderDate)", preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -213,8 +213,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     func loadAllVehicleAnnotations() {
         
+        //let availableVehicles = RTVehicleController.sharedInstance.returnAllAvailableVehiclesInArea()
         let availableVehicles = RTVehicleController.sharedInstance.returnFakeVehiclesInStEdwards()
-        
+
         for vehicle in availableVehicles {
             let annotation = RTVehicleAnnotation()
             annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())

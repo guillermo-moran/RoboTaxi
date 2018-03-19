@@ -33,23 +33,28 @@ class RTVehicleController: NSObject {
             
             do {
                 
-                //let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Any]
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Any]
+                
+               
                 
                 //let posts = json["posts"] as? [[String: Any]] ?? []
-                let s = String(data: data, encoding: String.Encoding.utf8) as String!
-                print(s!)
+                //let s = String(data: data, encoding: String.Encoding.utf8) as String!
+                //print(s!)
                 
-                /*
-                 let user_id = json["user_id"] as! Int
-                 let order_id = json["order_id"] as! Int
-                 let vehicle_id = json["vehicle_id"] as! Int
-                 let orderDate = json["orderDate"] as! String
-                 let start_lat = json["start_lat"] as! Double
-                 let start_long = json["start_long"] as! Double
-                 let end_lat = json["end_lat"] as! Double
-                 let end_long = json["end_long"] as! Double
-                 */
                 
+                let vehicleID = json["vehicleID"] as! Int
+                let ownerID = json["orderID"] as! Int
+                let capacity = json["capacity"] as! Int
+                let inService = json["inService"] as! Bool
+                let inUse = json["isUse"] as! Bool
+                let currentLatitude = json["currentLatitude"] as! Double
+                let currentLongitude = json["currentLongitude"] as! Double
+                
+                
+               let newVehicle = RTVehicle(vehicleID: vehicleID, ownerID: ownerID, capacity: capacity, inService: inService, inUse: inUse, currentLatitude: currentLatitude, currentLongitude: currentLongitude)
+ 
+                
+                vehiclesArray.append(newVehicle)
                 //Signal semaphore after finishing
                 sem.signal()
                 
