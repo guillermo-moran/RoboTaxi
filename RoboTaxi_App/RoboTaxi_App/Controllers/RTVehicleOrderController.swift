@@ -43,8 +43,8 @@ class RTVehicleOrderController: NSObject {
         */
         
         //Lets make up values for testing purposes. We'll fill these values in appropriately at a later date
-        let userName = "user"
-        let userPass = "password"
+        let userName = RTNetworkController.sharedInstance.getUsername()
+        let userPass = RTNetworkController.sharedInstance.getPassword()
         let userLocationLong = 1.0
         let userLocationLat = 1.0
         let destinationLong = 1.0
@@ -141,8 +141,8 @@ class RTVehicleOrderController: NSObject {
         
         // This line will wait until the semaphore has been signaled
         // which will be once the data task has completed
-        sem.wait(timeout: .distantFuture)
-        
+        let _ = sem.wait(timeout: RTNetworkController.requestTimeout)
+
         print (newOrder.getOrderID())
         
         return newOrder

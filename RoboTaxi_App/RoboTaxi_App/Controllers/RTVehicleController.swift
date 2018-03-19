@@ -66,8 +66,8 @@ class RTVehicleController: NSObject {
         
         // This line will wait until the semaphore has been signaled
         // which will be once the data task has completed
-        sem.wait(timeout: .distantFuture)
-        
+        let _ = sem.wait(timeout: .distantFuture)
+
         return vehiclesArray
         
     }

@@ -57,7 +57,6 @@
                                 </state>
                                 <connections>
                                     <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BXj-iX-rQi"/>
-                                    <segue destination="f4u-LV-Ns0" kind="show" id="Rl0-yk-PLA"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Log In or Create an Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kXr-0F-RpK">
@@ -90,7 +89,7 @@
         <!--Login View Controller-->
         <scene sceneID="eRe-Iu-vbA">
             <objects>
-                <viewController id="f4u-LV-Ns0" customClass="RTLoginViewController" customModule="RoboTaxi_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RTLoginViewController" id="f4u-LV-Ns0" customClass="RTLoginViewController" customModule="RoboTaxi_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gd6-kb-VKP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -171,7 +170,7 @@
         <!--RoboTaxi-->
         <scene sceneID="rye-vE-hBd">
             <objects>
-                <viewController storyboardIdentifier="RTMainScreenViewController" title="RoboTaxi" id="LCQ-O3-7LE" customClass="RTMainScreenViewController" customModule="RoboTaxi_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RTMainScreenViewController" title="RoboTaxi" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LCQ-O3-7LE" customClass="RTMainScreenViewController" customModule="RoboTaxi_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jtp-Yh-Jcf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

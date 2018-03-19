@@ -10,6 +10,9 @@ import UIKit
 
 class RTLoginViewController: UIViewController {
     
+    @IBOutlet weak var userName_textField: UITextField!
+    @IBOutlet weak var password_textField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,32 +24,32 @@ class RTLoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBOutlet weak var userName_textField: UITextField!
-    
-    @IBOutlet weak var password_textField: UITextField!
-    
-    let username = "username"
-    let password = "password"
     
     @IBAction func button_logIn(_ sender: Any) {
         // get rid of keyboard
         userName_textField.resignFirstResponder()
         password_textField.resignFirstResponder()
-        // placeholder login data for now
-        if userName_textField.text == username && password_textField.text == password {
-            
-            // take us to the next view
-            let goToRTMainViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTMainScreenViewController") as! RTMainScreenViewController
-            
+      
+        let goToRTMainViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTMainScreenViewController") as! RTMainScreenViewController
+        
+        let user = userName_textField.text
+        let pass = password_textField.text
+        
+        let networkController = RTNetworkController.sharedInstance
+        
+        let authenticated = networkController.login(username: user!, password: pass!)
+        
+        if (authenticated) {
             self.present(goToRTMainViewController, animated: true, completion: nil)
         }
-        else{
-            displayMessage(userMsg: "Username or password is incorrect")
+        else {
+            displayMessage(userMsg: "The Username or Password is Incorrect")
         }
+        
     }
 
     func displayMessage(userMsg:String) -> Void {
-        let alertController = UIAlertController(title: "Alert", message: userMsg, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Error", message: userMsg, preferredStyle: .alert)
         
         let OkAction = UIAlertAction(title: "OK", style: .default)
         {
@@ -55,7 +58,7 @@ class RTLoginViewController: UIViewController {
             print("OK button clicked")
             DispatchQueue.main.async
                 {
-                    self.dismiss(animated: true, completion: nil)
+                    //self.dismiss(animated: true, completion: nil)
             }
             // thess lines above
         }

@@ -11,6 +11,15 @@ $userDate			= $_POST["date"];
 
 $requestType 		= $_POST["request_type"];
 
+/*
+ ███╗   ███╗ █████╗ ██╗███╗   ██╗
+ ████╗ ████║██╔══██╗██║████╗  ██║
+ ██╔████╔██║███████║██║██╔██╗ ██║
+ ██║╚██╔╝██║██╔══██║██║██║╚██╗██║
+ ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║
+ ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+*/
+
 function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType) {
 
 	if (isset($requestType)) {
@@ -34,7 +43,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 			}
 
 
-			verifyUserCredentials($userName, $userPass);
+			verifyUserCredentials($userName, $userPass, $requestType);
 			return;
 		}
 
@@ -50,20 +59,27 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 }
 
-
+/*
+  ██████╗ ██████╗ ██████╗ ███████╗██████╗ ███████╗
+ ██╔═══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝
+ ██║   ██║██████╔╝██║  ██║█████╗  ██████╔╝███████╗
+ ██║   ██║██╔══██╗██║  ██║██╔══╝  ██╔══██╗╚════██║
+ ╚██████╔╝██║  ██║██████╔╝███████╗██║  ██║███████║
+  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝
+*/
 
 function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
 
 	//JSON Example
 
-	$isAuthenticated = verifyUserCredentials($user_name, $user_password);
+	$isAuthenticated = verifyUserCredentials($user_name, $user_password, NULL);
 
 	if (!$isAuthenticated) {
 		returnStatus("User not authenticated!");
 		return;
 	}
 
-	$nearestVehicle = getNearestVehicle($userLatitude, $userLongitude);
+	$nearestVehicle = getNearestAvailableVehicle($userLatitude, $userLongitude);
 
 	$order = array(
 		'user_id'  		=> (int)$user_id,
@@ -80,15 +96,26 @@ function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $
 
 	);
 
-
-
 	$myJSON = json_encode($order);
 
 	echo $myJSON;
 
 }
 
-function getNearestVehicle($userLatitude, $userLongitude) {
+/*
+ ██╗   ██╗███████╗██╗  ██╗██╗ ██████╗██╗     ███████╗███████╗
+ ██║   ██║██╔════╝██║  ██║██║██╔════╝██║     ██╔════╝██╔════╝
+ ██║   ██║█████╗  ███████║██║██║     ██║     █████╗  ███████╗
+ ╚██╗ ██╔╝██╔══╝  ██╔══██║██║██║     ██║     ██╔══╝  ╚════██║
+  ╚████╔╝ ███████╗██║  ██║██║╚██████╗███████╗███████╗███████║
+   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
+ */
+
+function getAllNearbyVehicles($userLatitude, $userLongitude) {
+
+}
+
+function getNearestAvailableVehicle($userLatitude, $userLongitude) {
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
@@ -104,7 +131,16 @@ function getNearestVehicle($userLatitude, $userLongitude) {
 	return json_decode($jsonResp, true); //'true' returns an array instead of a json object
 }
 
-function verifyUserCredentials($user_name, $user_password) {
+/*
+  █████╗ ██╗   ██╗████████╗██╗  ██╗
+ ██╔══██╗██║   ██║╚══██╔══╝██║  ██║
+ ███████║██║   ██║   ██║   ███████║
+ ██╔══██║██║   ██║   ██║   ██╔══██║
+ ██║  ██║╚██████╔╝   ██║   ██║  ██║
+ ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝
+*/
+
+function verifyUserCredentials($user_name, $user_password, $requestType) {
 	/*
 	In the future, we want to make sure that the user is authenticated before
 	creating a new vehicle order.
@@ -112,12 +148,27 @@ function verifyUserCredentials($user_name, $user_password) {
 
 	//This is a temporary placeholder.
 	if ($user_name === "user" && $user_password === "password") {
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authenticated");
+		}
 		return true;
 	}
 	else {
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authentication Failure");
+		}
 		return false;
 	}
 }
+
+/*
+ ███╗   ███╗██╗███████╗ ██████╗
+ ████╗ ████║██║██╔════╝██╔════╝
+ ██╔████╔██║██║███████╗██║
+ ██║╚██╔╝██║██║╚════██║██║
+ ██║ ╚═╝ ██║██║███████║╚██████╗
+ ╚═╝     ╚═╝╚═╝╚══════╝ ╚═════╝
+*/
 
 function returnStatus($message) {
 	$hype = new stdClass();
