@@ -12,6 +12,19 @@ $userDate			= $_POST["date"];
 $requestType 		= $_POST["request_type"];
 
 /*
+	=======================
+	VALID REQUEST TYPES
+	=======================
+
+	ORDER 			- Submit a vehicle and trip order
+	AUTHENTICATE 	- Request server authentication
+	PING			- Ping the server
+	UPDATE_VEHICLE	- Update vehicle location
+
+*/
+
+
+/*
  ███╗   ███╗ █████╗ ██╗███╗   ██╗
  ████╗ ████║██╔══██╗██║████╗  ██║
  ██╔████╔██║███████║██║██╔██╗ ██║
@@ -110,6 +123,10 @@ function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $
   ╚████╔╝ ███████╗██║  ██║██║╚██████╗███████╗███████╗███████║
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
  */
+
+ function updateVehicleLocation($vehicleID) {
+	 
+ }
 
 function getAllNearbyVehicles($userLatitude, $userLongitude) {
 

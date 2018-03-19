@@ -100,7 +100,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         if (orderController.isEmptyOrder(order: newOrder)) {
             
-            let alert = UIAlertController(title: "Error", message: "An error occurred while processing your order.", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Error", message: "An Error Occurred While Processing Your Order.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             
