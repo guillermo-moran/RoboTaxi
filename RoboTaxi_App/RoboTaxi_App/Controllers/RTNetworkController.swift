@@ -12,7 +12,7 @@ class RTNetworkController: NSObject {
     
     static let sharedInstance = RTNetworkController()
     
-    static let serverAddress  = "https://gmoran.create.stedwards.edu/RoboTaxi/testServer.php"
+    static let serverAddress  = "https://gmoran.create.stedwards.edu/RoboTaxi/Controller.php"
     static let requestTimeout = DispatchTime.distantFuture //DispatchTime.now() + .seconds(30)
     
     private var loggedIn : Bool
@@ -121,6 +121,8 @@ class RTNetworkController: NSObject {
         let keychain = KeychainSwift()
         
         if (keychain.delete("com.WeGo.RoboTaxi.Username") && keychain.delete("com.WeGo.RoboTaxi.Password")) {
+            
+            loggedIn = false
             
             return true
         }

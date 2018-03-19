@@ -44,6 +44,10 @@ class RTVehicle: NSObject {
         
     }
     
+    func getCapacity() -> Int {
+        return self.capacity
+    }
+    
     func getVehicleID() -> Int {
         return self.vehicleID
     }

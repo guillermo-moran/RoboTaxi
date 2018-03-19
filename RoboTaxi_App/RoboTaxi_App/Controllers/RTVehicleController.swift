@@ -77,7 +77,7 @@ class RTVehicleController: NSObject {
         
         let fakeCoordinates = [
             [30.230808, -97.752050],
-            [30.228176, -97.755012],
+            
             [30.228769, -97.758295]
         ];
         

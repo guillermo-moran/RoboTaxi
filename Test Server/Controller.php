@@ -9,6 +9,8 @@ $destinationLong	= $_POST["dest_long"];
 $destinationLat		= $_POST["dest_lat"];
 $userDate			= $_POST["date"];
 
+$vehicleID			= $_POST["vehicleID"];
+
 $requestType 		= $_POST["request_type"];
 
 /*
@@ -124,9 +126,23 @@ function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
  */
 
- function updateVehicleLocation($vehicleID) {
-	 
- }
+function getVehicleLocation($vehicleID) {
+
+	$curl = curl_init();
+
+ 	curl_setopt_array($curl, array(
+ 	    CURLOPT_RETURNTRANSFER => 1,
+ 	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=$vehicleID',
+ 	    CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+ 	));
+
+ 	$jsonResp = curl_exec($curl);
+
+ 	curl_close($curl);
+
+ 	return json_decode($jsonResp, true); //'true' returns an array instead of a json object
+
+}
 
 function getAllNearbyVehicles($userLatitude, $userLongitude) {
 

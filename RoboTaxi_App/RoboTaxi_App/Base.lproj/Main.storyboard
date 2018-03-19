@@ -220,6 +220,9 @@
                                 <rect key="frame" x="16" y="34" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="default_profile"/>
+                                <connections>
+                                    <action selector="openUserSettings:" destination="LCQ-O3-7LE" eventType="touchUpInside" id="fAk-SU-3eH"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

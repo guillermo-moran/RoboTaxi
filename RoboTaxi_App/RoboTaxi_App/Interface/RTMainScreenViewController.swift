@@ -107,6 +107,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             return
         }
         
+        /*
         let order_id = newOrder.getOrderID()
         let vehicle = newOrder.getVehicle()
         let orderDate = newOrder.getOrderDate()
@@ -115,8 +116,34 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
+        */
+        let vehicle = newOrder.getVehicle()
+        
+        let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
+        
+        
+        self.placeUserAssignedVehicleOnMap(vehicle: vehicle)
+    
+    }
+    
+    @IBAction func openUserSettings(_ sender: Any) {
+        
+        if (RTNetworkController.sharedInstance.logout()) {
+            
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        
+        //Log out for now
+        
         
     }
+    
     
     
     /*
@@ -209,6 +236,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         view?.annotation = annotation
         
         return view
+    }
+    
+    func placeUserAssignedVehicleOnMap(vehicle : RTVehicle) {
+        let annotation = RTVehicleAnnotation()
+        annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
+        annotation.image = #imageLiteral(resourceName: "blue_car")
+        annotation.title = "Your Vehicle"
+        annotation.subtitle = "On it's way!"
+        
+        self.mainMapView.addAnnotation(annotation)
     }
     
     func loadAllVehicleAnnotations() {
