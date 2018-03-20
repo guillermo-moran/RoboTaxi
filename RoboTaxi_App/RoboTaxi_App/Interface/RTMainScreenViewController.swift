@@ -123,7 +123,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
             
-            self.moveCar(vehicle: self.annotationWithVehicleID(id: vehicle.getVehicleID()), destinationCoordinate: CLLocationCoordinate2DMake(30.245432,  -97.751267))
+            //self.moveCar(vehicle: self.annotationWithVehicleID(id: vehicle.getVehicleID()), destinationCoordinate: CLLocationCoordinate2DMake(30.245432,  -97.751267))
             
         })
         
