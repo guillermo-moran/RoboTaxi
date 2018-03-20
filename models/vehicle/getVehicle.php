@@ -7,12 +7,9 @@
  *
  * Actual functional PHP getVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
- *
- * Usage:   getVehicle.php?vehicleID=1
- *          returns JSON with all vehicle data and HTTP code 202 if successful, 404 if ID is not found in database
  */
 
-$db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
+$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
 $rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
 $vehicle = new stdClass();
