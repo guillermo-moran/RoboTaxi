@@ -12,11 +12,7 @@ import MapKit
 
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
-    private var isNotificationVisible = false {
-        didSet {
-            setNeedsStatusBarAppearanceUpdate()
-        }
-    }
+    private var visibleVehicles : [RTVehicle] = []
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
     
@@ -106,19 +102,18 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             if (orderController.isEmptyOrder(order: newOrder)) {
                 
+                //If the order is empty, an error occured. Tell the user.
+
                 
                 let alert = UIAlertController(title: "Error", message: "An Error Occurred While Processing Your Order.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
  
-                
-                
                 return
             }
             
             
             let vehicle = newOrder.getVehicle()
-            
             
             let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -128,13 +123,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
             
+            self.moveCar(vehicle: self.annotationWithVehicleID(id: vehicle.getVehicleID()), destinationCoordinate: CLLocationCoordinate2DMake(30.245432,  -97.751267))
+            
         })
         
-        //If the order is empty, an error occured. Tell the user.
-        
-        
-
-    
     }
     
     @IBAction func openUserSettings(_ sender: Any) {
@@ -166,7 +158,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations.first!
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 250000, 250000)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2500, 2500)
         mainMapView.setRegion(coordinateRegion, animated: false)
         locationManager.stopUpdatingLocation()
     }
@@ -218,6 +210,26 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ██║  ██║██║ ╚████║██║ ╚████║╚██████╔╝   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║███████║
      ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
+    
+    private func annotationWithVehicleID(id : Int) -> RTVehicleAnnotation {
+        for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
+            
+            if existingAnnotation.vehicleID == id {
+                
+                existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
+                existingAnnotation.title = "Your Vehicle"
+                existingAnnotation.subtitle = "On it's way!"
+                
+                mainMapView.removeAnnotation(existingAnnotation)
+                mainMapView.addAnnotation(existingAnnotation)
+                
+                return existingAnnotation;
+            }
+        }
+        let x = RTVehicleAnnotation()
+        return x
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation.isKind(of: MKUserLocation.self) {  //Handle user location annotation..
             return nil  //Default is to let the system handle it.
@@ -245,14 +257,43 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     }
     
     
-    func placeUserAssignedVehicleOnMap(vehicle : RTVehicle) {
+    func placeVehicleOnMap(vehicle : RTVehicle, isUserVehicle : Bool) {
+        
+        
+        for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
+            
+            if existingAnnotation.vehicleID == vehicle.getVehicleID() {
+                
+                existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
+                existingAnnotation.title = "Your Vehicle"
+                existingAnnotation.subtitle = "On it's way!"
+                
+                mainMapView.removeAnnotation(existingAnnotation)
+                mainMapView.addAnnotation(existingAnnotation)
+                
+                return;
+            }
+        }
+        
         let annotation = RTVehicleAnnotation()
         annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
-        annotation.image = #imageLiteral(resourceName: "blue_car")
-        annotation.title = "Your Vehicle"
-        annotation.subtitle = "On it's way!"
+        
+        annotation.vehicleID = vehicle.getVehicleID()
+        
+        if (isUserVehicle) {
+            annotation.image = #imageLiteral(resourceName: "blue_car")
+            annotation.title = "Your Vehicle"
+            annotation.subtitle = "On it's way!"
+        }
+        else {
+            annotation.image = #imageLiteral(resourceName: "vehicle_icon")
+            annotation.title = "Vehicle"
+            annotation.subtitle = "Available"
+        }
         
         self.mainMapView.addAnnotation(annotation)
+        
+        
     }
     
     
@@ -261,13 +302,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         let availableVehicles = RTVehicleController.sharedInstance.returnAllAvailableVehiclesInArea()
         
         for vehicle in availableVehicles {
-            let annotation = RTVehicleAnnotation()
-            annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
-            annotation.image = #imageLiteral(resourceName: "vehicle_icon")
-            annotation.title = "Vehicle"
-            annotation.subtitle = "Available"
             
-            self.mainMapView.addAnnotation(annotation)
+            self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: false)
             
         }
         
@@ -283,9 +319,13 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
     */
     
+    
+    
     func moveCar(vehicle : RTVehicleAnnotation, destinationCoordinate : CLLocationCoordinate2D) {
         UIView.animate(withDuration: 20, animations: {
             vehicle.coordinate = destinationCoordinate
+            self.mainMapView.removeAnnotation(vehicle)
+            self.mainMapView.addAnnotation(vehicle)
 
         }, completion:  { success in
             if success {
@@ -294,6 +334,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             } else {
                 // handle a canceled animation, i.e move to destination immediately
                 vehicle.coordinate = destinationCoordinate
+                self.mainMapView.removeAnnotation(vehicle)
+                self.mainMapView.addAnnotation(vehicle)
             }
         })
     }
@@ -302,20 +344,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         let annotation = RTVehicleAnnotation()
     
-        annotation.title = "Your Vehicle"
-        annotation.subtitle = "On it's way!"
-        
-        if (isUserVehicle) {
-            annotation.image = #imageLiteral(resourceName: "blue_car")
-        }
-        else {
-            annotation.image = #imageLiteral(resourceName: "vehicle_icon")
-        }
         
         DispatchQueue.main.async {
-            annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
-            
-            self.mainMapView.addAnnotation(annotation)
+            self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: isUserVehicle)
         }
         
         
@@ -328,9 +359,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             DispatchQueue.main.async {
                 for i in 0 ... pointCount - 1 {
-                    print("aaa")
-                    let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
-                    annotation.coordinate = coordinate
+                    //print("aaa")
+                        let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
+                        annotation.coordinate = coordinate
                     
                 }
             }
@@ -348,7 +379,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
         
         
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.230475, longitude: -97.758380), addressDictionary: nil))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.245432, longitude: -97.751267), addressDictionary: nil))
         request.requestsAlternateRoutes = true
         request.transportType = .automobile
         

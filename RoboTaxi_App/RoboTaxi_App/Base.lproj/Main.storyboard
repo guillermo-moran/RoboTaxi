@@ -183,7 +183,7 @@
                                 <rect key="frame" x="16" y="597" width="343" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
-                                <state key="normal" title="Request Vehicle">
+                                <state key="normal" title="Request Ride to Torchy's">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>

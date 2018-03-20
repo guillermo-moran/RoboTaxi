@@ -151,7 +151,5 @@ class RTVehicleOrderController: NSObject {
         //return newOrder
         
     }
-    
-    
 
 }
