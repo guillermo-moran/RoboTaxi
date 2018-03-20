@@ -140,7 +140,7 @@ class userRepository
         if(mysqli_num_rows($ruselt) > 0) {
 
             $json['success'] = 'Welcome' . $user_name;
-            echo json_encode($json);
+            return json_encode($json);
             mysqli_close($this->connection);
         }
 
@@ -153,7 +153,7 @@ class userRepository
             else{
                 $json['error'] = 'Wrong Password';
             }
-            echo json_encode($json);
+            return json_encode($json);
             mysqli_close($this->connection);
 
         }
@@ -171,7 +171,7 @@ class userRepository
             }
             else{
 
-                echo json_encode("You Must fill both fields");
+                return json_encode("You Must fill both fields");
             }
         }
 
