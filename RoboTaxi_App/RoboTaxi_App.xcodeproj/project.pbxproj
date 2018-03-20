@@ -25,6 +25,8 @@
 		B3A440CD2025A9F4005DC45C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CC2025A9F4005DC45C /* Assets.xcassets */; };
 		B3A440D02025A9F4005DC45C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CE2025A9F4005DC45C /* LaunchScreen.storyboard */; };
 		B3A440DB2025A9F4005DC45C /* RoboTaxi_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */; };
+		B3BC84662060B84C0069A931 /* Delayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BC84652060B84C0069A931 /* Delayer.swift */; };
+		B3BC846F20616D400069A931 /* RTUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BC846E20616D400069A931 /* RTUserLocation.swift */; };
 		B3F9B5362044BA9100551891 /* RTVehicleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B5352044BA9100551891 /* RTVehicleController.swift */; };
 		B3F9B53A2044BE5900551891 /* RTVehicleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B5392044BE5900551891 /* RTVehicleAnnotation.swift */; };
 		B3F9B53F2044BF1E00551891 /* RTVehicleAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F9B53E2044BF1E00551891 /* RTVehicleAnnotationView.swift */; };
@@ -63,6 +65,8 @@
 		B3A440D62025A9F4005DC45C /* RoboTaxi_AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoboTaxi_AppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoboTaxi_AppTests.swift; sourceTree = "<group>"; };
 		B3A440DC2025A9F4005DC45C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3BC84652060B84C0069A931 /* Delayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delayer.swift; sourceTree = "<group>"; };
+		B3BC846E20616D400069A931 /* RTUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTUserLocation.swift; sourceTree = "<group>"; };
 		B3F9B5352044BA9100551891 /* RTVehicleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleController.swift; sourceTree = "<group>"; };
 		B3F9B5392044BE5900551891 /* RTVehicleAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleAnnotation.swift; sourceTree = "<group>"; };
 		B3F9B53E2044BF1E00551891 /* RTVehicleAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTVehicleAnnotationView.swift; sourceTree = "<group>"; };
@@ -159,6 +163,7 @@
 		B3A440C42025A9F4005DC45C /* RoboTaxi_App */ = {
 			isa = PBXGroup;
 			children = (
+				B3BC84642060B8250069A931 /* Utils */,
 				B3243AE520328D3100D0ABD3 /* Interface */,
 				B3243AE220328CA600D0ABD3 /* Controllers */,
 				B3243ADD202E5D5400D0ABD3 /* Models */,
@@ -179,6 +184,15 @@
 				B3A440DC2025A9F4005DC45C /* Info.plist */,
 			);
 			path = RoboTaxi_AppTests;
+			sourceTree = "<group>";
+		};
+		B3BC84642060B8250069A931 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B3BC84652060B84C0069A931 /* Delayer.swift */,
+				B3BC846E20616D400069A931 /* RTUserLocation.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		B3F9B5382044BDF500551891 /* Vehicle Annotations */ = {
@@ -301,6 +315,8 @@
 				B3243AE420328D1700D0ABD3 /* RTVehicleOrderController.swift in Sources */,
 				B32E58492026BFF7007974B9 /* RTMainScreenViewController.swift in Sources */,
 				B3243AE12032895700D0ABD3 /* RTOrder.swift in Sources */,
+				B3BC84662060B84C0069A931 /* Delayer.swift in Sources */,
+				B3BC846F20616D400069A931 /* RTUserLocation.swift in Sources */,
 				B3A440C62025A9F4005DC45C /* AppDelegate.swift in Sources */,
 				B340B0082027C8F900C66128 /* RTNetworkController.swift in Sources */,
 				B3F9B53A2044BE5900551891 /* RTVehicleAnnotation.swift in Sources */,
