@@ -1,9 +1,9 @@
 <?php
 
-$username = $_POST['username'];
-$password = $_POST['password'];
+$username = $_GET['username'];
+$password = $_GET['password'];
 
-function main() {
+function main($username,$password) {
     if(isset($username, $password)) {
         include_once userRepository::
 
@@ -14,10 +14,11 @@ function main() {
     }
     else {
         $array = array(
-        {'Status' => "Incorrect parameters"}
+            'status' => 'Incorrect parameters'
         );
         echo json_encode($array);
     }
 }
 
-main();
+
+main($username,$password);
