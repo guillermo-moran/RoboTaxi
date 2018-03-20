@@ -21,12 +21,12 @@ class RTVehicleOrderController: NSObject {
         return false
     }
     
-    func requestNewOrder() -> RTOrder {
+    func requestNewOrder(successHandler: @escaping (_ response: RTOrder) -> Void)  {
         
         //var newOrder = RTOrder()
         
         //Semaphore create
-        let sem = DispatchSemaphore(value: 0)
+        //let sem = DispatchSemaphore(value: 0)
         
         let url = URL(string: RTNetworkController.serverAddress)
         var request = URLRequest(url: url!)
@@ -128,9 +128,12 @@ class RTVehicleOrderController: NSObject {
                 newOrder.setEndLatitude(lat: end_lat)
                 newOrder.setEndLongitude(long: end_long)
                 
+                // Return the new order and vehicle
+                successHandler(newOrder as RTOrder!)
+                
                 
                 //Signal semaphore after finishing
-                sem.signal()
+                //sem.signal()
                 
                 
             } catch let error as NSError {
@@ -141,11 +144,11 @@ class RTVehicleOrderController: NSObject {
         
         // This line will wait until the semaphore has been signaled
         // which will be once the data task has completed
-        let _ = sem.wait(timeout: RTNetworkController.requestTimeout)
+        //let _ = sem.wait(timeout: RTNetworkController.requestTimeout)
 
-        print (newOrder.getOrderID())
+        //print (newOrder.getOrderID())
         
-        return newOrder
+        //return newOrder
         
     }
     
