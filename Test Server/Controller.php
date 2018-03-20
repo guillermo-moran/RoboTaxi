@@ -22,6 +22,7 @@ $requestType 		= $_POST["request_type"];
 	AUTHENTICATE 	- Request server authentication
 	PING			- Ping the server
 	UPDATE_VEHICLE	- Update vehicle location
+	VEHICLE_LIST	- List of all nearby vehicles
 
 */
 
@@ -59,6 +60,15 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 
 			verifyUserCredentials($userName, $userPass, $requestType);
+			return;
+		}
+
+		if ($requestType === "VEHICLE_LIST") {
+			if (!isset($userLocationLat, $userLocationLong)) {
+				returnStatus("Parameters not set!2");
+				return;
+			}
+			getAllNearbyVehicles($userLocationLat, $userLocationLong);
 			return;
 		}
 
@@ -126,13 +136,13 @@ function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
  */
 
-function getVehicleLocation($vehicleID) {
+function returnUpdatedVehicleInfoArray($vehicleID) {
 
 	$curl = curl_init();
 
  	curl_setopt_array($curl, array(
  	    CURLOPT_RETURNTRANSFER => 1,
- 	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=$vehicleID',
+ 	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID='.$vehicleID,
  	    CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
  	));
 
@@ -145,6 +155,16 @@ function getVehicleLocation($vehicleID) {
 }
 
 function getAllNearbyVehicles($userLatitude, $userLongitude) {
+	$vehiclesArray = array();
+
+	for ($x = 1; $x < 5; $x++) {
+
+		$vehicle = returnUpdatedVehicleInfoArray($x);
+		$vehiclesArray[$x] = $vehicle;
+	}
+
+	$myJSON = json_encode($vehiclesArray);
+	echo $myJSON;
 
 }
 

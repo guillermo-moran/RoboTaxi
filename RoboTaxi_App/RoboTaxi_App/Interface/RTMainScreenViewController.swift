@@ -12,6 +12,12 @@ import MapKit
 
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    private var isNotificationVisible = false {
+        didSet {
+            setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+    
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
     
     @IBOutlet weak var currentLocationBarView: UIView!
@@ -100,9 +106,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             if (orderController.isEmptyOrder(order: newOrder)) {
                 
+                
                 let alert = UIAlertController(title: "Error", message: "An Error Occurred While Processing Your Order.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
+ 
+                
                 
                 return
             }
@@ -110,12 +119,14 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             let vehicle = newOrder.getVehicle()
             
+            
             let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
             
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-            //self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
+
             
-            self.requestTestRoute(vehicle: vehicle, isUserVehicle: true)
+            self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
             
         })
         
@@ -155,7 +166,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations.first!
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2500, 2500)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 250000, 250000)
         mainMapView.setRegion(coordinateRegion, animated: false)
         locationManager.stopUpdatingLocation()
     }
@@ -247,9 +258,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     func loadAllVehicleAnnotations() {
         
-        //let availableVehicles = RTVehicleController.sharedInstance.returnAllAvailableVehiclesInArea()
-        let availableVehicles = RTVehicleController.sharedInstance.returnFakeVehiclesInStEdwards()
-
+        let availableVehicles = RTVehicleController.sharedInstance.returnAllAvailableVehiclesInArea()
+        
         for vehicle in availableVehicles {
             let annotation = RTVehicleAnnotation()
             annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
@@ -258,8 +268,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             annotation.subtitle = "Available"
             
             self.mainMapView.addAnnotation(annotation)
-
+            
         }
+        
+    
     }
     
     /*
@@ -274,6 +286,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     func moveCar(vehicle : RTVehicleAnnotation, destinationCoordinate : CLLocationCoordinate2D) {
         UIView.animate(withDuration: 20, animations: {
             vehicle.coordinate = destinationCoordinate
+
         }, completion:  { success in
             if success {
                 // handle a successfully ended animation
@@ -285,11 +298,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         })
     }
     
-    func testAnimateVehicleRoute(vehicle : RTVehicle, route : MKRoute, isUserVehicle : Bool) {
+    func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool) {
         
         let annotation = RTVehicleAnnotation()
-        annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
-        
+    
         annotation.title = "Your Vehicle"
         annotation.subtitle = "On it's way!"
         
@@ -300,27 +312,37 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             annotation.image = #imageLiteral(resourceName: "vehicle_icon")
         }
         
-        self.mainMapView.addAnnotation(annotation)
-        
-    
-        
-        let pointCount = route.polyline.pointCount
-        print(pointCount)
-        
-        
-        //for i in 0 ... pointCount - 1 {
-        //        let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
-        //        annotation.coordinate = coordinate
+        DispatchQueue.main.async {
+            annotation.coordinate = CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude())
             
-        //}
+            self.mainMapView.addAnnotation(annotation)
+        }
         
-        let coordinate = MKCoordinateForMapPoint(route.polyline.points()[pointCount - 1])
-        moveCar(vehicle: annotation, destinationCoordinate: coordinate)
+        
+        generateVehicleRoute(vehicle: vehicle, isUserVehicle: isUserVehicle, successHandler: {
+            (route) in
+            
+            let pointCount = route.polyline.pointCount
+            print(pointCount)
+            
+            
+            DispatchQueue.main.async {
+                for i in 0 ... pointCount - 1 {
+                    print("aaa")
+                    let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
+                    annotation.coordinate = coordinate
+                    
+                }
+            }
+        })
+        
+        //let coordinate = MKCoordinateForMapPoint(route.polyline.points()[pointCount - 1])
+        //moveCar(vehicle: annotation, destinationCoordinate: coordinate)
         
     }
     
     
-    func requestTestRoute(vehicle : RTVehicle, isUserVehicle : Bool) {
+    private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, successHandler: @escaping (_ response: MKRoute) -> Void) {
         
         let request = MKDirectionsRequest()
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
@@ -346,12 +368,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             */
             let route = unwrappedResponse.routes[0]
             
+            //Delayer.delay(bySeconds: 1) {
             self.mainMapView.add(route.polyline)
-            
-            self.testAnimateVehicleRoute(vehicle: vehicle, route: route, isUserVehicle: isUserVehicle)
+            //}
+            // Return the new order and vehicle
+            successHandler(route as MKRoute!)
         }
-        
-        
         
     }
     
