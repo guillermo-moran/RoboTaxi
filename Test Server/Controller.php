@@ -47,7 +47,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 				return;
 			}
 
-			createNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+            requestNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
 			return;
 		}
 		if ($requestType === "AUTHENTICATE") {
@@ -93,7 +93,38 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
   ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝
 */
 
-function createNewOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
+function requestNewOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
+	$newOrderWithVehicle = fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
+	echo $newOrderWithVehicle;
+}
+
+function fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude)
+{
+    $isAuthenticated = verifyUserCredentials($user_name, $user_password, NULL);
+
+    if (!$isAuthenticated) {
+        returnStatus("User not authenticated!");
+        return;
+    }
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://',
+        CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+    ));
+
+    $jsonResp = curl_exec($curl);
+
+    curl_close($curl);
+    return $jsonResp;
+
+    //return json_decode($jsonResp, true); //'true' returns an array instead of a json object
+
+}
+
+function createDummyOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
 
 	//JSON Example
 
