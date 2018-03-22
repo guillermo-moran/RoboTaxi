@@ -30,7 +30,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
         return;
     }
 
-    $newOrder = createDummyOrder($userName, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+    $newOrder = createNewOrder($userName, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
     return;
 }
 
@@ -39,7 +39,40 @@ function authenticate($userName, $userPass) {
     return true;
 }
 
-function createDummyOrder($user_name, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
+function createNewOrder($user_name, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
+
+
+
+    $vehicleInfo = getNearestAvailableVehicle($userLatitude, $userLongitude);
+
+    
+    $newOrder = new Order(0, 0, $vehicleInfo["vehicleID"], $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
+
+    include orderRepository::
+    insertOrder($newOrder);
+
+    $order = array(
+        'user_id'  		=> (int)$newOrder->getUserId(),
+        'order_id' 		=> (int)$newOrder->getOrderId(), //We'll fill these in soon
+        'orderDate' 	=> $user_date,
+        'start_lat' 	=> (float)$newOrder->getStartLatitude(),
+        'start_long' 	=> (float)$newOrder->getStartLongitude(),
+        'end_lat' 		=> (float)$newOrder->getEndLatitude(),
+        'end_long' 		=> (float)$newOrder->getEndLongitude(),
+
+        'vehicle' 		=> $vehicleInfo, //Array
+
+        'status'		=> 'Success'
+
+    );
+
+    $myJSON = json_encode($order);
+
+    return $myJSON;
+
+}
+
+function createDummyOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
 
     //JSON Example
 
@@ -106,7 +139,3 @@ main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong
 
 ?>
 
-main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType);
-
-
-?>
