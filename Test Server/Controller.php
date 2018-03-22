@@ -47,7 +47,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 				return;
 			}
 
-            requestNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+            requestNewOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong, $userDate);
 			return;
 		}
 		if ($requestType === "AUTHENTICATE") {
@@ -98,7 +98,7 @@ function requestNewOrder($user_name, $user_password, $user_date, $userLatitude, 
 	echo $newOrderWithVehicle;
 }
 
-function fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude)
+function fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude, $userDate)
 {
     $isAuthenticated = verifyUserCredentials($user_name, $user_password, NULL);
 
@@ -107,12 +107,23 @@ function fetchOrderFromOrderServer($user_name, $user_password, $user_date, $user
         return;
     }
 
+    // Get cURL resource
     $curl = curl_init();
-
+	// Set some options - we are passing in a useragent too here
     curl_setopt_array($curl, array(
         CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_URL => 'https://',
-        CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+        CURLOPT_URL => 'https://salzaidy.create.stedwards.edu/cosc3339/createOrder.php',
+        CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => array(
+            'user_name' 		=> $user_name,
+            'user_pass' 		=> $user_password,
+			'user_longitude' 	=> $userLongitude,
+			'user_latitude'		=> $userLatitude,
+			'dest_long'			=> $destLongitude,
+			'dest_lat'			=> $destLatitude,
+			'date'				=> $userDate
+        )
     ));
 
     $jsonResp = curl_exec($curl);
@@ -138,7 +149,7 @@ function createDummyOrder($user_name, $user_password, $user_date, $userLatitude,
 	$nearestVehicle = getNearestAvailableVehicle($userLatitude, $userLongitude);
 
 	$order = array(
-		'user_id'  		=> (int)$user_id,
+		'user_id'  		=> (int)0,
 		'order_id' 		=> rand(1, 999), //We'll fill these in soon
 		'orderDate' 	=> $user_date,
 		'start_lat' 	=> (float)$userLatitude,

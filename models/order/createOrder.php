@@ -45,7 +45,7 @@ function createNewOrder($user_name, $user_date, $userLatitude, $userLongitude, $
 
     $vehicleInfo = getNearestAvailableVehicle($userLatitude, $userLongitude);
 
-    
+
     $newOrder = new Order(0, 0, $vehicleInfo["vehicleID"], $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
 
     include orderRepository::
