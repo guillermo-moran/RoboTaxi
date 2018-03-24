@@ -7,59 +7,50 @@
  *
  * Actual functional PHP setVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
- *
- * TODO:    TJ's scrubQuery does not work (syntax error)
  */
 
-$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
+require './sharedFunctions.php';
 
-
-//check if ID exists in database
-$rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
-
-if ($rs['vehicleID'] == null)
+if (checkVehicleID($_GET['vehicleID']) == true)
 {
-    http_response_code(404);
-    print "ERROR: vehicleID is not in database!";
-}
-else
-{
-    $bigquery = "update WeGoVehicleDB
-    set ownerID = ". $_GET['ownerID'] .",
-    capacity = ". $_GET['capacity'] .",
-    inService = ". $_GET['inService'] .",
-    inUse = ". $_GET['inUse'] .",
-    currentLatitude = ". $_GET['currentLatitude'] .",
-    currentLongitude = ". $_GET['currentLongitude'] ."  where vehicleID = " . $_GET['vehicleID'];
+    $login = PHPcredentials();
+    $db = new mysqli($login[0], $login[1], $login[2], $login[3]);
 
-    //print $bigquery;
+    //check if ID exists in database
+    $rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
-    if ($_GET['ownerID'] != null and $_GET['capacity'] != null and $_GET['inService'] != null and $_GET['inUse'] != null and $_GET['currentLatitude'] != null and $_GET['currentLongitude'] != null)
-    {
-        $check1 = true;
-        $check2 = true;
-
-        if ($_GET['inService'] < 0 or $_GET['inService'] > 1) $check1 = false;
-        if ($_GET['inUse'] < 0 or $_GET['inUse'] > 1) $check2 = false;
-
-        if ($check1 == true and $check2 == true)
-        {
-            $rs = $db->query($bigquery);
-            http_response_code(202);
-            print "SUCCESS";
-        }
-        else
-        {
-            http_response_code(400);
-            print "ERROR: inService and/or inUse is not boolean!";
-        }
-    }
+    if ($rs['vehicleID'] == null) returnError("vehicleID not in database!");
     else
     {
-        http_response_code(400);
-        print "ERROR: Missing parameters!";
-    }
-}
+        $bigquery = "update WeGoVehicleDB
+		set ownerID = ". $_GET['ownerID'] .",
+		capacity = ". $_GET['capacity'] .",
+		inService = ". $_GET['inService'] .",
+		inUse = ". $_GET['inUse'] .",
+		currentLatitude = ". $_GET['currentLatitude'] .",
+		currentLongitude = ". $_GET['currentLongitude'] ."  where vehicleID = " . $_GET['vehicleID'];
 
-$db -> close();
+        //print $bigquery;
+
+        if ($_GET['ownerID'] != null and $_GET['capacity'] != null and $_GET['inService'] != null and $_GET['inUse'] != null and $_GET['currentLatitude'] != null and $_GET['currentLongitude'] != null)
+        {
+            $check1 = true;
+            $check2 = true;
+
+            if ($_GET['inService'] < 0 or $_GET['inService'] > 1) $check1 = false;
+            if ($_GET['inUse'] < 0 or $_GET['inUse'] > 1) $check2 = false;
+
+            if ($check1 == true and $check2 == true)
+            {
+                $rs = $db->query($bigquery);
+                returnSuccess(null);
+            }
+            else returnError("nService and/or inUse is not boolean!");
+        }
+        else returnError("Missing parameters!");
+    }
+
+    $db -> close();
+}
+else returnError("vehicleID is invalid!");
 ?>

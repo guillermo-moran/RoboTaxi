@@ -9,21 +9,26 @@
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
  */
 
-$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
-$rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
+require './sharedFunctions.php';
 
-if (count($rs) == 0)
+if (checkVehicleID($_GET['vehicleID']) == true)
 {
-    http_response_code(404);
-    print "ERROR: vehicleID does not exists!";
-}
-else
-{
-    http_response_code(202);
-    $rs = $db->query("delete from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] );
-    print "SUCCESS";
-}
+    $login = PHPcredentials();
+    $db = new mysqli($login[0], $login[1], $login[2], $login[3]);
+    $rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
+
+    if (count($rs) == 0)
+    {
+        returnError("vehicleID does not exist!");
+    }
+    else
+    {
+        $rs = $db->query("delete from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] );
+        returnSuccess(null);
+    }
 
 
-$db -> close();
+    $db -> close();
+}
+else returnError("vehicleID is invalid!");
 ?>
