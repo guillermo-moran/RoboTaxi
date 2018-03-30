@@ -33,7 +33,8 @@ if (checkVehicleID($_GET['vehicleID']) == true)
 		currentLongitude = ". $_GET['currentLongitude'] .",
 		lastUpdate = '" . $dateAndTime ."' where vehicleID = " . $_GET['vehicleID'];
 
-		print $bigquery;
+		//DEBUG ONLY
+		//print $bigquery;
 
 		if ($_GET['ownerID'] != null and $_GET['capacity'] != null and $_GET['inService'] != null and $_GET['inUse'] != null and $_GET['currentLatitude'] != null and $_GET['currentLongitude'] != null)
 		{

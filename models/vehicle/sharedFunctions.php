@@ -69,17 +69,18 @@ function printTop()
 	"		<meta charset='utf-8'> \n".
 	"		<title>WeGo vehicleDB Dashboard</title> \n".
 	"		<meta name='viewport' content='width=device-width, initial-scale=1'> \n".
-	"		<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'> \n".
-	"	   <link rel='stylesheet' type='text/css' href='http://cdn.datatables.net/1.10.4/css/jquery.dataTables.css'> \n".
+	"		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'> \n".
+	"	   <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.4/css/jquery.dataTables.css'> \n".
 	"		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script> \n".
-	"		<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script> \n".
-	"		<script src='http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js'></script> \n".
+	"		<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script> \n".
+	"		<script src='https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js'></script> \n".
 	"		<script type='text/javascript' class='init'> \n".
 	"		$(document).ready(function() { \n".
 	"		$('#table1').DataTable( { \n".
 	"		\"order\": [[ 0, \"asc\" ]], \n".
 	"		\"bLengthChange\": false, \n".
-	"		\"lengthMenu\": [[-1], [\"All\"]] \n".
+	"		\"lengthMenu\": [[-1], [\"-1\"]], \n".
+	"		\"searching\": false, \n".
 	"		} ); \n".
 	"		} ); \n".
 	"		</script> \n".

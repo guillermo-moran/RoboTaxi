@@ -5,7 +5,7 @@
  * Date: 29.03.2018
  * Time: 12:45
  *
- * vehicleDB Dashboard: Make vehicle page
+ * vehicleDB Dashboard: Set vehicle page
  */
  
 //For debugging purposes
