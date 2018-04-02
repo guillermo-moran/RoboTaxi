@@ -9,14 +9,14 @@
  */
 
 //#####################################
-//
+	
 //	SETTINGS
 	$minVehicleID = 0;
 	$maxVehicleID = 1024;
-//	
+	
 //	SETTINGS FOR vehicleDB DASHBOARD
-	$passwordClear = "wego123!";
-//	
+	$passwordClear = "wego123!" ;
+	
 //#####################################
  
 function PHPcredentials()
@@ -98,8 +98,7 @@ function printTop()
 	"	</span>".
 	"	</div> \n".
 	"	<div class=\"collapse navbar-collapse\" id=\"myNavbar\"> \n".
-	"	  <ul class=\"nav navbar-nav\"> \n".
-	"		<li><a href=\"vehicleDashboardLogin.php\">Login/Logout</a></li> \n";
+	"	  <ul class=\"nav navbar-nav\"> \n";
 	
 	if (isLoggedIn())
 	{
@@ -109,7 +108,8 @@ function printTop()
 		"		<li><a href=\"vehicleDashboardSet.php\">Set vehicle data</a></li> \n";
 	}
 	
-	print "	  </ul> \n".
+	print "		<li><a href=\"vehicleDashboardLogin.php\">Login/Logout</a></li> \n".
+	"	  </ul> \n".
 	"	</div> \n".
 	"  </div> \n".
 	"</nav>".
@@ -132,12 +132,12 @@ function printTop()
 	"</script> \n".
 	
 	
-	"<body>";
+	"<body> \n\n";
 }
 
 function printFooter()
 {
-	print "</br>".
+	print "\n\n</br>".
 	"<p style='text-align:center; font-size:9px'><b>© 2018 ME</b></p>".
 	"</body> \n".
 	"</html>"; 
@@ -148,23 +148,19 @@ function deleteCookie()
 	setcookie("login", 'xxxxxx', time()-300);
 }
 
+
 function checkCredentials($inputPassword)
 {
-	global $passwordClear;
-	global $enableTempBlock;
-	global $tempBlockTime;   
+	global $passwordClear; 
 	global $password;
-	
-	$tempBlockTime = $tempBlockTime + 1;
 	
 	if ($inputPassword == $password)
 	{
-		setcookie("login", $password, time()+2592000);
+		setcookie("login", $password, time() + 86400); //86400 = 1 day
 		return true;
 	}
 	else
 	{
-		if ($enableTempBlock == true) setcookie("block", time() + $tempBlockTime, time() + $tempBlockTime);
 		deleteCookie();
 		return false;
 	}
@@ -172,9 +168,7 @@ function checkCredentials($inputPassword)
 
 function isLoggedIn()
 {
-	global $passwordClear;
-	global $enableTempBlock;
-	global $tempBlockTime;   
+	global $passwordClear; 
 	global $password;
 	
 	if (isset($_COOKIE['login']) and $_COOKIE['login'] == $password) return true;

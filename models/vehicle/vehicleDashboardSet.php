@@ -17,9 +17,77 @@ require './sharedFunctions.php';
 
 printTop();
 
+//section copied (start) from getAllVehicles.php, could not use include/require!
+$login = PHPcredentials();
+$db = new mysqli($login[0], $login[1], $login[2], $login[3]);
+
+$rs = $db->query("select count(*) from WeGoVehicleDB")->fetch_assoc();
+$count = $rs['count(*)'];
+//section (end) from getAllVehicles.php
+
 if (isLoggedIn())
-{
-	print "<center><h4>Feature still in development!</h4></center>";
+{	
+	if (isset($_GET['selectVehicleID']))
+	{
+		print
+		"<p><b>Vehicle data change request:</b></p> \n";
+		
+		$url = "setVehicle.php?vehicleID=" . $_GET['selectVehicleID'];
+		
+		if (isset($_GET['newOwnerID']) and $_GET['newOwnerID'] != null)			$url = $url . "&ownerID=" . $_GET['newOwnerID'];
+		if (isset($_GET['newCapacity']) and $_GET['newCapacity'] != null)		$url = $url . "&capacity=" . $_GET['newCapacity'];
+		
+		if (isset($_GET['newInService']) and $_GET['newInService'] != null)		$url = $url . "&inService=1";
+		else 																	$url = $url . "&inService=0";
+		
+		print $url;
+		
+		print "</br></br><button onclick=\"confirm()\">Confirm</button>".		
+		"<script> \n".
+		"function confirm()  \n".
+		"{  \n".
+		"	window.open('" . $url . "', '_blank').focus(); \n".
+		"	window.location.href = './vehicleDashboardMain.php'; \n".
+		"}  \n".
+		"</script> \n";
+	}
+	else
+	{	
+		print
+		"<p><b>Only fill in the fields to be changed and check 'inService'!</b>".
+		"</br>inUse and location data can only be changed programmatically by the iOS app</b></p>".
+		"<form action=\"./vehicleDashboardSet.php\">".
+		
+		"<p>vehicleID: <select name='selectVehicleID'>\n";
+		
+		//section copied (start) from getAllVehicles.php, could not use include/require!
+		for ($x = $minVehicleID; $x <= $maxVehicleID; $x++)
+		{
+			$rs = $db->query("select * from WeGoVehicleDB where vehicleID = $x")->fetch_assoc();
+
+			$vehicle = new stdClass();
+			$vehicle -> vehicleID           = $rs['vehicleID'];
+			$vehicle -> ownerID             = $rs['ownerID'];
+			$vehicle -> capacity            = $rs['capacity'];
+			$vehicle -> inService           = $rs['inService'];
+			$vehicle -> inUse               = $rs['inUse'];
+			$vehicle -> currentLatitude     = $rs['currentLatitude'];
+			$vehicle -> currentLongitude    = $rs['currentLongitude'];	
+			$vehicle -> lastUpdate		    = $rs['lastUpdate'];
+					
+			if ($vehicle -> vehicleID != null)
+			//section (end) from getAllVehicles.php
+			{
+				print "ownerID: <option value='" .  "$vehicle->vehicleID" . "'>$vehicle->vehicleID</option>";
+			}
+		}
+		print "</select></p> \n".
+		"<p>ownerID: <input type=\"number\" name=\"newOwnerID\"></p> \n".
+		"<p>capacity: <input type=\"number\" name=\"newCapacity\"></p> \n".
+		"<p>inService: <input type=\"checkbox\" name=\"newInService\" value=\"TRUE\"></p> \n".
+		"<p><input type=\"submit\" value=\"Submit\"></p>".
+		"</form> \n";
+	}
 }
 else
 {
@@ -27,4 +95,4 @@ else
 }
 
 printFooter();
- ?>
+?>

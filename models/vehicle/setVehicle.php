@@ -21,37 +21,33 @@ if (checkVehicleID($_GET['vehicleID']) == true)
 
 	if ($rs['vehicleID'] == null) returnError("vehicleID not in database!");
 	else
-	{
-        $dateAndTime = returnCurrentDateandTime();
+	{		
+		$bigquery = "update WeGoVehicleDB set ";
 		
-		$bigquery = "update WeGoVehicleDB
-		set ownerID = ". $_GET['ownerID'] .",
-		capacity = ". $_GET['capacity'] .",
-		inService = ". $_GET['inService'] .",
-		inUse = ". $_GET['inUse'] .",
-		currentLatitude = ". $_GET['currentLatitude'] .",
-		currentLongitude = ". $_GET['currentLongitude'] .",
-		lastUpdate = '" . $dateAndTime ."' where vehicleID = " . $_GET['vehicleID'];
+		if (isset($_GET['ownerID']) and $_GET['ownerID'] != null)						$bigquery = $bigquery . "ownerID = "			. $_GET['ownerID'] . 			", ";
+		if (isset($_GET['capacity']) and $_GET['capacity'] != null)						$bigquery = $bigquery . "capacity = "			. $_GET['capacity'] .			", ";
+		if (isset($_GET['inService']) and $_GET['inService'] != null)					$bigquery = $bigquery . "inService = "			. $_GET['inService'] .			", ";
+		if (isset($_GET['inUse']) and $_GET['inUse'] != null)							$bigquery = $bigquery . "inUse = "				. $_GET['inUse'] .				", ";
+		if (isset($_GET['currentLatitude']) and $_GET['currentLatitude'] != null)		$bigquery = $bigquery . "currentLatitude = "	. $_GET['currentLatitude'] .	", ";
+		if (isset($_GET['currentLongitude']) and $_GET['currentLongitude'] != null)		$bigquery = $bigquery . "currentLongitude = "	. $_GET['currentLongitude'] .	", ";
+		
+		$bigquery = $bigquery . "lastUpdate = '" . returnCurrentDateandTime() ."' where vehicleID = " . $_GET['vehicleID'];
 
 		//DEBUG ONLY
-		//print $bigquery;
+		//print $bigquery . "\n\n";
 
-		if ($_GET['ownerID'] != null and $_GET['capacity'] != null and $_GET['inService'] != null and $_GET['inUse'] != null and $_GET['currentLatitude'] != null and $_GET['currentLongitude'] != null)
+		$check1 = true;
+		$check2 = true;
+
+		if ($_GET['inService'] < 0 or $_GET['inService'] > 1) $check1 = false;
+		if ($_GET['inUse'] < 0 or $_GET['inUse'] > 1) $check2 = false;
+
+		if ($check1 == true and $check2 == true)
 		{
-			$check1 = true;
-			$check2 = true;
-
-			if ($_GET['inService'] < 0 or $_GET['inService'] > 1) $check1 = false;
-			if ($_GET['inUse'] < 0 or $_GET['inUse'] > 1) $check2 = false;
-
-			if ($check1 == true and $check2 == true)
-			{
-				$rs = $db->query($bigquery);
-				returnSuccess("Vehicle data changed!");
-			}
-			else returnError("inService and/or inUse is not boolean!");
+			$rs = $db->query($bigquery);
+			returnSuccess("Vehicle data changed!");
 		}
-		else returnError("Missing parameters!");
+		else returnError("inService and/or inUse is not boolean!");
 	}
 
 	$db -> close();

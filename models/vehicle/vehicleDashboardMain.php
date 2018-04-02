@@ -19,6 +19,12 @@ printTop();
 
 if (isLoggedIn())
 {
+	if (file_exists("./error_log"))
+	{
+		print "<center><p style=\"color:red;\">There is a PHP error log saved on the server!</p></center></br>";
+	}
+	
+	
 	//section copied (start) from getAllVehicles.php, could not use include/require!
 	$login = PHPcredentials();
 	$db = new mysqli($login[0], $login[1], $login[2], $login[3]);
@@ -59,9 +65,9 @@ if (isLoggedIn())
 		$vehicle -> currentLatitude     = $rs['currentLatitude'];
 		$vehicle -> currentLongitude    = $rs['currentLongitude'];	
 		$vehicle -> lastUpdate		    = $rs['lastUpdate'];
-		//section (end) from getAllVehicles.php
-		
+				
 		if ($vehicle -> vehicleID != null)
+		//section (end) from getAllVehicles.php
 		{
 			$currentPosition = $rs['currentLatitude'] . "," . $rs['currentLongitude'];
 			
@@ -69,8 +75,13 @@ if (isLoggedIn())
 			print "<td>" . $rs['vehicleID'] . "</td> \n";
 			print "<td>" . $rs['ownerID'] . "</td> \n";
 			print "<td>" . $rs['capacity'] . "</td> \n";
-			print "<td>" . $rs['inService'] . "</td> \n";
-			print "<td>" . $rs['inUse'] . "</td> \n";
+			
+			if ($rs['inService'] == "0") print "<td>NO</td> \n";
+			if ($rs['inService'] == "1") print "<td>YES</td> \n";
+			
+			if ($rs['inUse'] == "0") print "<td>NO</td> \n";
+			if ($rs['inUse'] == "1") print "<td>YES</td> \n";
+					
 			print "<td><a target='_blank' href='https://www.google.com/maps/place/". $currentPosition ."'>" . $currentPosition . "</a></td> \n";
 			print "<td>" . $rs['lastUpdate'] . "</td> \n";
 			
@@ -102,4 +113,4 @@ else
 }
 
 printFooter();
- ?>
+?>
