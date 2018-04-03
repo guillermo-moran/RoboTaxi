@@ -36,9 +36,7 @@ if (isLoggedIn())
 		
 		if (isset($_GET['newOwnerID']) and $_GET['newOwnerID'] != null)			$url = $url . "&ownerID=" . $_GET['newOwnerID'];
 		if (isset($_GET['newCapacity']) and $_GET['newCapacity'] != null)		$url = $url . "&capacity=" . $_GET['newCapacity'];
-		
-		if (isset($_GET['newInService']) and $_GET['newInService'] != null)		$url = $url . "&inService=1";
-		else 																	$url = $url . "&inService=0";
+		if (isset($_GET['newInService']) and $_GET['newInService'] != null)		$url = $url . "&inService=" . $_GET['newInService'];
 		
 		print $url;
 		
@@ -54,7 +52,7 @@ if (isLoggedIn())
 	else
 	{	
 		print
-		"<p><b>Only fill in the fields to be changed and check 'inService'!</b>".
+		"<p><b>Only fill in the fields to be changed!</b>".
 		"</br>inUse and location data can only be changed programmatically by the iOS app</b></p>".
 		"<form action=\"./vehicleDashboardSet.php\">".
 		
@@ -83,8 +81,10 @@ if (isLoggedIn())
 		}
 		print "</select></p> \n".
 		"<p>ownerID: <input type=\"number\" name=\"newOwnerID\"></p> \n".
-		"<p>capacity: <input type=\"number\" name=\"newCapacity\"></p> \n".
-		"<p>inService: <input type=\"checkbox\" name=\"newInService\" value=\"TRUE\"></p> \n".
+		"<p>capacity: <input type=\"number\" name=\"newCapacity\"></p> \n".		
+		"<p>inService: <input type=\"radio\" name=\"newInService\" value=\"1\"> Yes \n".
+		"<input type=\"radio\" name=\"newInService\" value=\"0\"> No</p> \n".
+		
 		"<p><input type=\"submit\" value=\"Submit\"></p>".
 		"</form> \n";
 	}
