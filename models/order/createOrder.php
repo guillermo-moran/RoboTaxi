@@ -15,7 +15,7 @@ $destinationLong	= $_POST["dest_long"];
 $destinationLat		= $_POST["dest_lat"];
 $userDate			= $_POST["date"];
 
-function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType)
+function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate)
 {
 
     $isAuthenticated = authenticate($userName, $userPass, NULL);
@@ -30,7 +30,9 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
         return;
     }
 
+    //$newOrder = createDummyOrder($userName, $userPass, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
     $newOrder = createNewOrder($userName, $userDate, $userLocationLat, $userLocationLong, $destinationLat, $destinationLong);
+    echo $newOrder;
     return;
 }
 
@@ -45,11 +47,12 @@ function createNewOrder($user_name, $user_date, $userLatitude, $userLongitude, $
 
     $vehicleInfo = getNearestAvailableVehicle($userLatitude, $userLongitude);
 
+    include "./Order.php";
+    $newOrder = new Order(0, 0, 1, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
 
-    $newOrder = new Order(0, 0, $vehicleInfo["vehicleID"], $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
+    include "./orderRepository.php";
 
-    include orderRepository::
-    insertOrder($newOrder);
+    orderRepository::insertOrder($newOrder);
 
     $order = array(
         'user_id'  		=> (int)$newOrder->getUserId(),
@@ -76,7 +79,7 @@ function createDummyOrder($user_name, $user_password, $user_date, $userLatitude,
 
     //JSON Example
 
-    $isAuthenticated = verifyUserCredentials($user_name, $user_password, NULL);
+    $isAuthenticated = authenticate($user_name, $user_password, NULL);
 
     if (!$isAuthenticated) {
         returnStatus("User not authenticated!");
@@ -135,7 +138,6 @@ function returnStatus($message) {
     echo $myJSON;
 }
 
-main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType);
+main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate);
 
 ?>
-
