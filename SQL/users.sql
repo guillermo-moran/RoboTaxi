@@ -15,3 +15,5 @@ CREATE TABLE user(
     credit_expiration INTEGER NOT NULL,
     credit_ccv INTEGER NOT NULL
 );
+
+

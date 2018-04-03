@@ -87,14 +87,14 @@ class OrderRepository
     public static function insertOrder(Order $order)
     {
         $userId = $order->getUserId();
-        $userName = $order->getUserName();
+        //$userName = $order->getUserName();
         $vehicleId = $order->getVehicleId();
         $orderDate = $order->getOrderDate();
         $startLatitude = $order->getStartLatitude();
         $startLongitude = $order->getStartLongitude();
         $endLatitude = $order->getEndLatitude();
         $endLongitude = $order->getEndLongitude();
-        $amount = $order->getAmount();
+        //$amount = $order->getAmount();
 
         return Database::runQuerySingle("INSERT INTO orderdb(userName, vehicleId, orderDate, startLatitude,
                                         startLongitude, endLatitude, endLongitude, amount)
