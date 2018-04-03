@@ -36,7 +36,7 @@ $requestType 		= $_POST["request_type"];
  ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 */
 
-function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType) {
+function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID) {
 
 	if (isset($requestType)) {
 
@@ -74,9 +74,16 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 		if ($requestType === "PING") {
 			returnStatus("PONG");
+			return;
+		}
+		if ($requestType == "UPDATE_VEHICLE") {
+			returnUpdatedVehicleInfoArray($vehicleID);
+			return;
 		}
 
 		returnStatus("Invalid request type");
+
+
 	}
 	else {
 		returnStatus("Invalid request type");
@@ -242,6 +249,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 	*/
 
 	//This is a temporary placeholder.
+	/*
 	if ($user_name === "user" && $user_password === "password") {
 		if ($requestType === "AUTHENTICATE") {
 			returnStatus("Authenticated");
@@ -254,6 +262,35 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 		}
 		return false;
 	}
+	*/
+
+    // Get cURL resource
+    $curl = curl_init();
+    // Set some options - we are passing in a useragent too here
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://malkhud2.create.stedwards.edu/user/authenticate.php',
+        CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => array(
+            'username' 		=> $user_name,
+            'password' 		=> $user_password
+        )
+    ));
+
+    $jsonResp = curl_exec($curl);
+
+    curl_close($curl);
+
+    $array = json_decode($jsonResp, true); //'true' returns an array instead of a json object
+
+	if ($array['status'] === "success") {
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
 
 /*
@@ -272,6 +309,6 @@ function returnStatus($message) {
 	echo $myJSON;
 }
 
-main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType);
+main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID);
 
 ?>
