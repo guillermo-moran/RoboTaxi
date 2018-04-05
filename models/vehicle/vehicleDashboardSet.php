@@ -53,7 +53,7 @@ if (isLoggedIn())
 	{	
 		print
 		"<p><b>Only fill in the fields to be changed!</b>".
-		"</br>inUse and location data can only be changed programmatically by the iOS app</b></p>".
+		"</br>inUse and location data can only be changed programmatically by the iOS app, vehicles that are currently in use cannot be changed.</b></p>".
 		"<form action=\"./vehicleDashboardSet.php\">".
 		
 		"<p>vehicleID: <select name='selectVehicleID'>\n";
@@ -73,7 +73,7 @@ if (isLoggedIn())
 			$vehicle -> currentLongitude    = $rs['currentLongitude'];	
 			$vehicle -> lastUpdate		    = $rs['lastUpdate'];
 					
-			if ($vehicle -> vehicleID != null)
+			if ($rs['vehicleID'] != null and $rs['inUse'] == 0)
 			//section (end) from getAllVehicles.php
 			{
 				print "ownerID: <option value='" .  "$vehicle->vehicleID" . "'>$vehicle->vehicleID</option>";

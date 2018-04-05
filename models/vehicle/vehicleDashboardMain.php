@@ -85,17 +85,21 @@ if (isLoggedIn())
 			print "<td><a target='_blank' href='https://www.google.com/maps/place/". $currentPosition ."'>" . $currentPosition . "</a></td> \n";
 			print "<td>" . $rs['lastUpdate'] . "</td> \n";
 			
-			print "<td><button onclick='delete" . $x ."()'>Delete</button></td>";		
-			print
-			"<script> \n".
-			"	function delete" . $x ."() { \n".
-			"	if (confirm('Do you really want to delete vehicleID " . $rs['vehicleID'] . "?')) \n".
-			"		{ \n".
-			"			window.open('./removeVehicle.php?vehicleID=" . $rs['vehicleID'] ."', '_blank').focus()\n".
-			"			location.reload(); \n".
-			"		} \n".
-			"	} \n".
-			"</script> \n";
+			if ($rs['inUse'] == "0")
+			{
+				print "<td><button onclick='delete" . $x ."()'>Delete</button></td>";		
+				print
+				"<script> \n".
+				"	function delete" . $x ."() { \n".
+				"	if (confirm('Do you really want to delete vehicleID " . $rs['vehicleID'] . "?')) \n".
+				"		{ \n".
+				"			window.open('./removeVehicle.php?vehicleID=" . $rs['vehicleID'] ."', '_blank').focus()\n".
+				"			location.reload(); \n".
+				"		} \n".
+				"	} \n".
+				"</script> \n";
+			}
+			else print "<td>N/A <i>(vehicle in use)</i></td>";
 			
 			print "</tr> \n";
 		}
