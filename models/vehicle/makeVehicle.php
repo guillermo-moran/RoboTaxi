@@ -9,23 +9,22 @@
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
  */
 
-//print $_GET['vehicleID'];
+require './sharedFunctions.php';
+ 
+if (checkVehicleID($_GET['vehicleID']) == true)
+{ 
+	$login = PHPcredentials();
+	$db = new mysqli($login[0], $login[1], $login[2], $login[3]);
+	$rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
-$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
-$rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
+	if (count($rs) > 0) returnError("vehicleID already exists!");
+	else
+	{
+		$rs = $db->query("INSERT INTO WeGoVehicleDB(vehicleID, ownerID, capacity, inService, inUse, currentLatitude, currentLongitude, lastUpdate) VALUES (". $_GET['vehicleID'] .",0,0,0,0,0,0,'" . returnCurrentDateandTime() ."')");
+		returnSuccess("Vehicle created!");
+	}
 
-if (count($rs) > 0)
-{
-    http_response_code(400);
-    print "ERROR: vehicleID already exists!";
+	$db -> close();
 }
-else
-{
-    http_response_code(202);
-    $rs = $db->query("INSERT INTO WeGoVehicleDB(vehicleID, ownerID, capacity, inService, inUse, currentLatitude, currentLongitude) VALUES (". $_GET['vehicleID'] .",0,0,0,0,0,0)");
-    print "SUCCESS";
-}
-
-
-$db -> close();
+else returnError("vehicleID is invalid!");
 ?>

@@ -8,33 +8,40 @@
  * Actual functional PHP getVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
  */
+ 
+require './sharedFunctions.php';
 
-$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
-$rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
-
-$vehicle = new stdClass();
-
-$vehicle -> vehicleID           = $rs['vehicleID'];
-$vehicle -> ownerID             = $rs['ownerID'];
-$vehicle -> capacity            = $rs['capacity'];
-$vehicle -> inService           = $rs['inService'];
-$vehicle -> inUse               = $rs['inUse'];
-$vehicle -> currentLatitude     = $rs['currentLatitude'];
-$vehicle -> currentLongitude    = $rs['currentLongitude'];
-
-$json = json_encode($vehicle);
-
-
-if ($vehicle -> vehicleID == null)
+if (checkVehicleID($_GET['vehicleID']) == true)
 {
-    http_response_code(404);
-    print "ERROR: vehicleID not in database!";
-}
-else
-{
-    http_response_code(202);
-    print $json;
-}
+	$login = PHPcredentials();
+	$db = new mysqli($login[0], $login[1], $login[2], $login[3]);
+	$rs = $db->query("select * from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
-$db -> close();
+	$vehicle = new stdClass();
+
+	$vehicle -> vehicleID           = $rs['vehicleID'];
+	$vehicle -> ownerID             = $rs['ownerID'];
+	$vehicle -> capacity            = $rs['capacity'];
+	$vehicle -> inService           = $rs['inService'];
+	$vehicle -> inUse               = $rs['inUse'];
+	$vehicle -> currentLatitude     = $rs['currentLatitude'];
+	$vehicle -> currentLongitude    = $rs['currentLongitude'];
+	$vehicle -> lastUpdate		    = $rs['lastUpdate'];
+
+	$json = json_encode($vehicle);
+
+
+	if ($vehicle -> vehicleID == null)
+	{
+		returnError("vehicleID not in database!");
+	}
+	else
+	{
+		returnSuccess(null);
+		print $json;
+	}
+
+	$db -> close();
+}
+else returnError("vehicleID is invalid!");
 ?>
