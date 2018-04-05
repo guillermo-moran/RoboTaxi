@@ -31,7 +31,7 @@ if (checkVehicleID($_GET['vehicleID']) == true)
 	$json = json_encode($vehicle);
 
 
-	if ($vehicle -> vehicleID == null)
+	if ($rs['vehicleID'] == null)
 	{
 		returnError("vehicleID not in database!");
 	}

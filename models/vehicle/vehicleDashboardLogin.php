@@ -20,26 +20,27 @@ printTop();
 if (isset($_GET['logout']))
 {
 	deleteCookie();
+	
 	print "<center><h4>Login cookie cleared!</br>(Redirecting...)</h4></center>";
 	goToPage("vehicleDashboardLogin.php",1000);
 }
 else
 {
 	if (isset($_POST['userPassword']))
+	{
+		$input = hash('sha256',$_POST['userPassword']);
+	
+		if (checkCredentials($input) == true)
 		{
-			$input = hash('sha256',$_POST['userPassword']);
-		
-			if (checkCredentials($input) == true)
-			{
-				print "<center><h4>Login successful!</br>(Redirecting...)</h4></center>";
-				goToPage("vehicleDashboardMain.php",1000);
-			}
-			else
-			{
-				print "<center><h4>Login failed!</br>(Redirecting...)</h4></center>";
-				goToPage("vehicleDashboardLogin.php",1000);
-			}	
+			print "<center><h4>Login successful!</br>(Redirecting...)</h4></center>";
+			goToPage("vehicleDashboardMain.php",1000);
 		}
+		else
+		{
+			print "<center><h4>Login failed!</br>(Redirecting...)</h4></center>";
+			goToPage("vehicleDashboardLogin.php",1000);
+		}	
+	}
 	else
 	{
 		if (isLoggedIn() == true)
@@ -57,8 +58,6 @@ else
 		}
 	}
 }
-
-
 
 printFooter();
  ?>

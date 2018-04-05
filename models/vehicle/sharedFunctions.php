@@ -145,7 +145,7 @@ function printFooter()
 
 function deleteCookie()
 {
-	setcookie("login", 'xxxxxx', time()-300);
+	setcookie("login", 'xxxxxx', time()-300); //
 }
 
 
@@ -156,7 +156,7 @@ function checkCredentials($inputPassword)
 	
 	if ($inputPassword == $password)
 	{
-		setcookie("login", $password, time() + 86400); //86400 = 1 day
+		setcookie("login", $password, time() + 604800); //86400 = 1 day
 		return true;
 	}
 	else

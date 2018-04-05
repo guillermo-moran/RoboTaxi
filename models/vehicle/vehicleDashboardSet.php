@@ -20,9 +20,7 @@ printTop();
 //section copied (start) from getAllVehicles.php, could not use include/require!
 $login = PHPcredentials();
 $db = new mysqli($login[0], $login[1], $login[2], $login[3]);
-
 $rs = $db->query("select count(*) from WeGoVehicleDB")->fetch_assoc();
-$count = $rs['count(*)'];
 //section (end) from getAllVehicles.php
 
 if (isLoggedIn())
@@ -73,7 +71,7 @@ if (isLoggedIn())
 			$vehicle -> currentLongitude    = $rs['currentLongitude'];	
 			$vehicle -> lastUpdate		    = $rs['lastUpdate'];
 					
-			if ($rs['vehicleID'] != null and $rs['inUse'] == 0)
+			if ($rs['vehicleID'] != null and $rs['inUse'] == 0) //MODIFIED
 			//section (end) from getAllVehicles.php
 			{
 				print "ownerID: <option value='" .  "$vehicle->vehicleID" . "'>$vehicle->vehicleID</option>";
