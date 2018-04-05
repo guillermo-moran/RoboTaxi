@@ -7,15 +7,11 @@
  *
  * Actual functional PHP makeVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
- *
- * Usage:   makeVehicle.php?vehicleID=12
- *          Set all parameters of the vehicle using setVehicle.php
- *          trying to make vehicleID's that already exist will be refused
  */
 
 //print $_GET['vehicleID'];
 
-$db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
+$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
 $rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
 if (count($rs) > 0)

@@ -15,12 +15,14 @@ class RTVehicleAnnotation: NSObject, MKAnnotation {
     var title: String?
     var subtitle: String?
     var image: UIImage?
+    var vehicleID : Int?
     
     override init() {
         self.coordinate = CLLocationCoordinate2D()
         self.title = nil
         self.subtitle = nil
         self.image = nil
+        self.vehicleID = nil
     }
 
 }

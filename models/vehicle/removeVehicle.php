@@ -5,15 +5,11 @@
  * Date: 08.03.2018
  * Time: 17:21
  *
- * Actual functional PHP makeVehicle
+ * Actual functional PHP removeVehicle
  * https://tchallst.create.stedwards.edu/delorean/topics/api.php
- *
- * Usage:   removeVehicle.php?vehicleID=12
- *          trying to delete vehicleID's that don't exist will be refused
  */
 
-
-$db = new mysqli("localhost", "meicherc_phpUser", "KEvMLTly36", "meicherc_dbs");
+$db = new mysqli("localhost", "meicherc_WeGo", "erQ6340efSCf", "meicherc_WeGo");
 $rs = $db->query("select vehicleID from WeGoVehicleDB where vehicleID = " . $_GET['vehicleID'] )->fetch_assoc();
 
 if (count($rs) == 0)

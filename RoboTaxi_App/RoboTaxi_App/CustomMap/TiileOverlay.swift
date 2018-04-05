@@ -35,7 +35,7 @@ class TiileOverlay : MKTileOverlay {
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
-        guard let dataSource = dataSource else {
+        guard let _ = dataSource else {
             result(nil, nil)
             return
         }
