@@ -96,9 +96,7 @@ class RTNetworkController: NSObject {
         var success : Bool
         
         success = true
-        
-        
-        
+    
         return success
     }
     
@@ -138,4 +136,6 @@ class RTNetworkController: NSObject {
         let keychain = KeychainSwift()
         return keychain.get("com.WeGo.RoboTaxi.Password")!
     }
+    
+    
 }
