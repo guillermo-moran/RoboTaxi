@@ -205,8 +205,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
         mainMapView.setRegion(coordinateRegion, animated: true)
         
+        loadAllVehicleAnnotations()
+        
         var _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
-        //loadAllVehicleAnnotations()
+        
         
     }
     
