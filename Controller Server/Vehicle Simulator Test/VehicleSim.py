@@ -27,6 +27,9 @@ def main():
         print("Error! Invalid coordinate values")
         exit()
     else :
+
+        setVehicleInUse(vehicleID, True)
+
         array = []
         count = 0
 
@@ -40,6 +43,26 @@ def main():
                 array = []
                 time.sleep(5)
 
+        setVehicleInUse(vehicleID, False)
+
+def setVehicleInUse(vehicleID, status) :
+
+    if (status == True) :
+
+        req = urllib.request.Request('https://meicher.create.stedwards.edu/WeGoVehicleDB/setVehicle.php?vehicleID=%s&inUse=1' % (vehicleID))
+
+        with urllib.request.urlopen(req) as response:
+            the_page = response.read()
+
+        print(the_page)
+    else :
+
+        req = urllib.request.Request('https://meicher.create.stedwards.edu/WeGoVehicleDB/setVehicle.php?vehicleID=%s&inUse=0' % (vehicleID))
+
+        with urllib.request.urlopen(req) as response:
+            the_page = response.read()
+
+        print(the_page)
 
 
 def moveVehicle(vehicleID, coordinatesArray):
