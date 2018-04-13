@@ -207,7 +207,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         loadAllVehicleAnnotations()
         
-        var _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
+        //Refresh map vehicles every 2 minutes
+        
+        var _ = Timer.scheduledTimer(timeInterval: 240, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
         
         
     }

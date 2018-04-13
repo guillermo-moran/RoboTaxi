@@ -1,3 +1,5 @@
+#!/usr/bin/env /home/gmorancr/virtualenv/python34/3.4/bin/python3
+
 import urllib.request
 import time
 import sys

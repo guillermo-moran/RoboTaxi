@@ -10,6 +10,7 @@ $destinationLat		= $_POST["dest_lat"];
 $userDate			= $_POST["date"];
 
 $vehicleID			= $_POST["vehicleID"];
+$routeCoordinates 	= $_POST["route_coordinates"];
 
 $requestType 		= $_POST["request_type"];
 
@@ -23,6 +24,7 @@ $requestType 		= $_POST["request_type"];
 	PING			- Ping the server
 	UPDATE_VEHICLE	- Update vehicle location
 	VEHICLE_LIST	- List of all nearby vehicles
+	ROUTE_VEHICLE	- Begin vehicle route simulation
 
 */
 
@@ -36,14 +38,14 @@ $requestType 		= $_POST["request_type"];
  ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 */
 
-function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID) {
+function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID, $routeCoordinates) {
 
 	if (isset($requestType)) {
 
 		if ($requestType === "ORDER") {
 
 			if (!isset($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLat, $destinationLong, $userDate)) {
-				returnStatus("Parameters not set!1");
+				returnStatus("Parameters not set!");
 				return;
 			}
 
@@ -54,7 +56,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 
 			if (!isset($userName, $userPass)) {
-				returnStatus("Parameters not set!2");
+				returnStatus("Parameters not set!");
 				return;
 			}
 
@@ -65,7 +67,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 		if ($requestType === "VEHICLE_LIST") {
 			if (!isset($userLocationLat, $userLocationLong)) {
-				returnStatus("Parameters not set!2");
+				returnStatus("Parameters not set!");
 				return;
 			}
 			getAllNearbyVehicles($userLocationLat, $userLocationLong);
@@ -78,6 +80,11 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 		}
 		if ($requestType == "UPDATE_VEHICLE") {
 			returnUpdatedVehicleInfoArray($vehicleID);
+			return;
+		}
+
+		if ($requestType == "ROUTE_VEHICLE") {
+			beginVehicleRouteSimulation($vehicleID, $routeCoordinates);
 			return;
 		}
 
@@ -113,7 +120,6 @@ function fetchOrderFromOrderServer($user_name, $user_password, $user_date, $user
         returnStatus("User not authenticated!");
         return;
     }
-
     // Get cURL resource
     $curl = curl_init();
 	// Set some options - we are passing in a useragent too here
@@ -204,17 +210,48 @@ function returnUpdatedVehicleInfoArray($vehicleID) {
 }
 
 function getAllNearbyVehicles($userLatitude, $userLongitude) {
+
 	$vehiclesArray = array();
 
-	for ($x = 1; $x < 5; $x++) {
+	for ($x = 1; $x < 1024; $x++) {
 
 		$vehicle = returnUpdatedVehicleInfoArray($x);
+		if (is_null($vehicle)) {
+			break;
+		}
 		$vehiclesArray[$x] = $vehicle;
 	}
 
 	$myJSON = json_encode($vehiclesArray);
 	echo $myJSON;
 
+
+	/*
+	$curl = curl_init();
+
+ 	curl_setopt_array($curl, array(
+ 	    CURLOPT_RETURNTRANSFER => 1,
+ 	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getAllVehicles.php',
+ 	    CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+ 	));
+
+ 	$jsonResp = curl_exec($curl);
+
+ 	curl_close($curl);
+	//echo $jsonResp;
+
+	*/
+
+
+
+ 	//echo json_decode($jsonResp, false); //'true' returns an array instead of a json object
+
+}
+
+function beginVehicleRouteSimulation($vehicleID, $routeString) {
+	$command = escapeshellcmd('./Sim/VehicleSim.py 5 5 5');
+	$output = shell_exec($command);
+	echo $output;
 }
 
 function getNearestAvailableVehicle($userLatitude, $userLongitude) {
@@ -249,7 +286,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 	*/
 
 	//This is a temporary placeholder.
-	/*
+
 	if ($user_name === "user" && $user_password === "password") {
 		if ($requestType === "AUTHENTICATE") {
 			returnStatus("Authenticated");
@@ -262,8 +299,8 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 		}
 		return false;
 	}
-	*/
 
+	/*
     // Get cURL resource
     $curl = curl_init();
     // Set some options - we are passing in a useragent too here
@@ -290,6 +327,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 	else {
 		return false;
 	}
+	*/
 
 }
 
@@ -309,6 +347,7 @@ function returnStatus($message) {
 	echo $myJSON;
 }
 
-main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID);
-
+main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID, $routeCoordinates);
+//beginVehicleRouteSimulation(1,1);
+//getAllNearbyVehicles(2,2);
 ?>
