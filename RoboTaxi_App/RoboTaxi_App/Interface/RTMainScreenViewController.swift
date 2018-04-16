@@ -118,25 +118,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
             
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-           self.present(alert, animated: true, completion: nil)
-
-        
-            
-            
-            let main = DispatchQueue.main
-            //let animator = DispatchQueue(label: "animator")
- 
-            
-            main.async {
-                
-                //let vehicle = self.annotationWithVehicleID(id: 1)
-                
-                self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
-                
-                
-                
-               // self.moveCar(vehicle: vehicle, destinationCoordinate: CLLocationCoordinate2DMake(30.245432,  -97.751267))
-            }
+            self.present(alert, animated: true, completion: nil)
+            sleep(5)
+            self.beginVehicleRoute(vehicle: vehicle)
             
         })
         
@@ -189,6 +173,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝
      */
     
+
+    
     func initializeMapView() {
         
         self.locationManager.requestWhenInUseAuthorization()
@@ -209,7 +195,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         //Refresh map vehicles every 2 minutes
         
-        var _ = Timer.scheduledTimer(timeInterval: 240, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
+        
+        var _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
+        
+        //var _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.refreshVehicle), userInfo: nil, repeats: true)
+        //refreshVehicle(vehicle: visibleVehicles[0])
         
         
     }
@@ -223,12 +213,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
     
-    private func annotationWithVehicleID(id : Int) -> RTVehicleAnnotation {
+    private func getAnnotationWithVehicle(vehicle : RTVehicle) -> RTVehicleAnnotation {
         
         var index = 0
         for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
             
-            if existingAnnotation.vehicleID == id {
+            if existingAnnotation.vehicleID == vehicle.getVehicleID() {
                 index+=1
                 existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
                 existingAnnotation.title = "Your Vehicle"
@@ -277,9 +267,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             if existingAnnotation.vehicleID == vehicle.getVehicleID() {
                 
-                existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
-                existingAnnotation.title = "Your Vehicle"
-                existingAnnotation.subtitle = "On it's way!"
+                if (isUserVehicle) {
+                    existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
+                    existingAnnotation.title = "Your Vehicle"
+                    existingAnnotation.subtitle = "On it's way!"
+                }
+                else {
+                    existingAnnotation.image = #imageLiteral(resourceName: "vehicle_icon")
+                    existingAnnotation.title = "Vehicle"
+                    existingAnnotation.subtitle = "Available"
+                }
                 
                 mainMapView.removeAnnotation(existingAnnotation)
                 mainMapView.addAnnotation(existingAnnotation)
@@ -312,6 +309,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     @objc func loadAllVehicleAnnotations() {
         
         mainMapView.removeAnnotations(mainMapView.annotations)
+        self.visibleVehicles = []
         
         let background = DispatchQueue.global()
         let main = DispatchQueue.main
@@ -325,10 +323,22 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 for vehicle in availableVehicles {
                     
                     self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: false)
+                    self.visibleVehicles.append(vehicle)
                     
                 }
             }
         }
+    }
+    
+    @objc func refreshVehicle(vehicle : RTVehicle) {
+        let updatedVehicle = RTVehicleController.sharedInstance.returnUpdatedVehicle(vehicle: vehicle)
+        
+        let annotation = getAnnotationWithVehicle(vehicle: updatedVehicle)
+        
+        annotation.coordinate = CLLocationCoordinate2DMake(updatedVehicle.getCurrentLatitude(), updatedVehicle.getCurrentLongitude())
+        
+        mainMapView.removeAnnotation(annotation)
+        mainMapView.addAnnotation(annotation)
     }
     
     /*
@@ -340,7 +350,27 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
     */
     
+    func beginVehicleRoute(vehicle : RTVehicle) {
     
+        //let vehicle = self.annotationWithVehicleID(id: 1)
+            
+        let cString = self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
+            
+        
+        RTVehicleController.sharedInstance.requestVehicleRoute(vehicle: vehicle, routeCoordinateString: cString, successHandler: {
+                    (success) in
+                    
+            if (success == true) {
+                print("Success")
+            }
+            else {
+                print("Fail")
+            }
+                    
+     
+        })
+        
+    }
     
     func moveCar(vehicle : RTVehicleAnnotation, destinationCoordinate : CLLocationCoordinate2D) {
         
@@ -359,10 +389,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
     }
     
-    func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool) {
+    func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool) -> String {
         
-        let annotation = RTVehicleAnnotation()
-    
+        var coordinatesString = ""
+        
+        let sem = DispatchSemaphore(value: 0)
         
         DispatchQueue.main.async {
             self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: isUserVehicle)
@@ -380,14 +411,18 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 for i in 0 ... pointCount - 1 {
                     //print("aaa")
                         let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
-                        annotation.coordinate = coordinate
+                        //annotation.coordinate = coordinate
+                        coordinatesString += "\(coordinate.latitude) \(coordinate.longitude) "
                     
                 }
+                sem.signal()
             }
         })
         
         //let coordinate = MKCoordinateForMapPoint(route.polyline.points()[pointCount - 1])
         //moveCar(vehicle: annotation, destinationCoordinate: coordinate)
+        let _ = sem.wait(timeout: RTNetworkController.requestTimeout)
+        return coordinatesString
         
     }
     
