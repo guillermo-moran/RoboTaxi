@@ -26,7 +26,7 @@ def main():
     argsLen = len(args) #number of args
 
     if (argsLen % 2 != 0) :
-        print("Error! Invalid coordinate values")
+        print("Invalid Coordinate Points")
         exit()
     else :
 
@@ -40,10 +40,10 @@ def main():
             array.append(args[i])
 
             if count % 2 == 0 :
-                print('Sending Vehicle Request')
+                
                 moveVehicle(vehicleID, array)
                 array = []
-                time.sleep(5)
+                time.sleep(2)
 
         setVehicleInUse(vehicleID, False)
 
