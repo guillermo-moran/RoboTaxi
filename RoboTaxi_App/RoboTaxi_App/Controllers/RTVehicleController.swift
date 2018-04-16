@@ -12,7 +12,10 @@ class RTVehicleController: NSObject {
     
     static let sharedInstance = RTVehicleController()
     
+    
+    
     func returnAllAvailableVehiclesInArea() -> [RTVehicle]  {
+        
         
         //var newOrder = RTOrder()
         
@@ -111,13 +114,13 @@ class RTVehicleController: NSObject {
         var vehiclesArray : [RTVehicle] = []
         
         let fakeCoordinates = [
-            [30.230808, -97.752050],
+            //[30.230808, -97.752050],
             
             [30.228769, -97.758295]
         ];
         
         for array in fakeCoordinates {
-            let newVehicle = RTVehicle(vehicleID: 0, ownerID: 0, capacity: 2, inService: true, inUse: false, currentLatitude: array[0], currentLongitude: array[1])
+            let newVehicle = RTVehicle(vehicleID: 1, ownerID: 0, capacity: 2, inService: true, inUse: false, currentLatitude: array[0], currentLongitude: array[1])
             
             vehiclesArray.append(newVehicle);
         }
