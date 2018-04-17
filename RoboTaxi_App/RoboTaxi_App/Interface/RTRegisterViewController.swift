@@ -7,22 +7,46 @@
 //
 
 import UIKit
+import WebKit
 
-class RTRegisterViewController: UIViewController {
+class RTRegisterViewController: UIViewController, WKUIDelegate {
 
+    var webView: WKWebView!
+    
+    @IBOutlet weak var embeddedRegister_webKitView: WKWebView!
+    
+    
     // define URL constant
-    let URL_USER_REGISTER = URL(string: "http://malkhud2.create.stedwards.edu/wego/register.php")!
-
-    @IBOutlet weak var userName_textField: UITextField!
-
-    @IBOutlet weak var email_textField: UITextField!
-    @IBOutlet weak var password_textField: UITextField!
-
+    //let URL_USER_REGISTER = URL(string: "http://malkhud2.create.stedwards.edu/wego/register.php")!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        // this MIGHT not work
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        webView = WKWebView(frame: embeddedRegister_webKitView.frame, configuration: WKWebViewConfiguration() )
+        self.embeddedRegister_webKitView.addSubview(webView)
+        self.webView.allowsBackForwardNavigationGestures = true
+        let myURL = URL(string: "http://www.malkhud2.create.stedwards.edu/wego/register.php")
+        let myRequest = URLRequest(url: myURL!)
+        webView.load(myRequest)
+        
     }
+    
+    
+    @IBAction func doneWithRegisGoToLogin_button(_ sender: Any) {
+        
+        // segue to login screen after successful sign up
+        let goToRTLoginViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTLoginViewController") as! RTLoginViewController
+        
+        // take us to the login
+        self.present(goToRTLoginViewController, animated: true, completion: nil)
+    }
+    
+    /*
+
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -64,11 +88,7 @@ class RTRegisterViewController: UIViewController {
         }
         task.resume()
 
-        // segue to login screen after successful sign up
-        let goToRTLoginViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTLoginViewController") as! RTLoginViewController
-        
-        // take us to the login
-        self.present(goToRTLoginViewController, animated: true, completion: nil)
+     
     }
-
+*/
 }
