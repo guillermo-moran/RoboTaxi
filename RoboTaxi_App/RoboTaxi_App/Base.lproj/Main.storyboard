@@ -179,18 +179,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0yu-5g-Iaq">
-                                <rect key="frame" x="16" y="597" width="343" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
-                                <state key="normal" title="Request Ride to Torchy's">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AIp-I7-KIO"/>
-                                    <action selector="requestVehicle:" destination="LCQ-O3-7LE" eventType="touchUpInside" id="WL2-KC-NGa"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Bo-fx-MY5">
                                 <rect key="frame" x="64" y="32" width="295" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -213,6 +201,9 @@
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <action selector="searchFieldReturn:" destination="LCQ-O3-7LE" eventType="editingDidEndOnExit" id="h0B-nV-kaV"/>
+                                        </connections>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.98005234771573602" green="0.98005234771573602" blue="0.98005234771573602" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -236,8 +227,8 @@
                         <outlet property="currentLocationLabel" destination="Giv-KZ-tRg" id="LaZ-VI-ihu"/>
                         <outlet property="mainMapView" destination="9nj-35-tNj" id="wzr-5V-YcV"/>
                         <outlet property="profileButton" destination="wex-LJ-ugH" id="I3u-hd-8ZO"/>
-                        <outlet property="requestVehicleButton" destination="0yu-5g-Iaq" id="ISy-0b-3Ua"/>
                         <outlet property="searchDisplayController" destination="1jw-1G-qWj" id="mNF-iY-uSj"/>
+                        <outlet property="searchField" destination="U5z-lX-OPu" id="jkf-GU-eaT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gt5-yk-j3j" userLabel="First Responder" sceneMemberID="firstResponder"/>
