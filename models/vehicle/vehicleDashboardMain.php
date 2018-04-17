@@ -28,9 +28,7 @@ if (isLoggedIn())
 	//section copied (start) from getAllVehicles.php, could not use include/require!
 	$login = PHPcredentials();
 	$db = new mysqli($login[0], $login[1], $login[2], $login[3]);
-
 	$rs = $db->query("select count(*) from WeGoVehicleDB")->fetch_assoc();
-	$count = $rs['count(*)'];
 	//section (end) from getAllVehicles.php
 	
 	
