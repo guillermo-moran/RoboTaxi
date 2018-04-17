@@ -36,14 +36,15 @@ class RTVehicleController: NSObject {
             let postString = "user_name=\(userName)&user_pass=\(userPass)&vehicleID=\(vehicleID)&route_coordinates=\(coordinates)&request_type=\(requestType)"
             
             request.httpBody = postString.data(using: .utf8)
-            
+            request.timeoutInterval = 10000000000000000000
             
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data, error == nil else {
                     // check for fundamental networking error
                     print("error=\(String(describing: error))")
-                    
+                
                     return ()
+                    
                 }
                 
                 
@@ -178,7 +179,7 @@ class RTVehicleController: NSObject {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Dictionary<String, Any>]
                 //let posts = json["posts"] as? [[String: Any]] ?? []
-                print(json)
+               // print(json)
                 
                 let count = json.count
                 

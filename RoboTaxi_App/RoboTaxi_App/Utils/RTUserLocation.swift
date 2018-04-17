@@ -12,16 +12,45 @@ import MapKit
 class RTUserLocation: NSObject, CLLocationManagerDelegate {
     
     static let sharedInstance = RTUserLocation()
+    let locationManager = CLLocationManager()
     
-    private var userLocation = CLLocation()
+    var currentLongitude : Double
+    var currentLatitude : Double
+
+    
+    override init() {
+        
+        self.currentLatitude = 0
+        self.currentLongitude = 0
+        
+        self.locationManager.requestAlwaysAuthorization()
+        
+        super.init()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
+        
+    }
     
     func getUserLatitude() -> Double {
-        return userLocation.coordinate.latitude
+        return currentLatitude
     }
     
     func getUserLongitude() -> Double {
-        return userLocation.coordinate.longitude
+        return currentLongitude
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        currentLatitude = locValue.latitude
+        currentLongitude = locValue.longitude
+        
+    
+    }
 
 }

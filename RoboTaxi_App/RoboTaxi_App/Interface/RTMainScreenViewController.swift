@@ -20,10 +20,14 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     @IBOutlet weak var profileButton: UIButton!
     @IBOutlet weak var mainMapView: MKMapView!
     @IBOutlet weak var requestVehicleButton: UIButton!
+    @IBOutlet weak var currentLocationLabel: UILabel!
     
     
     private var locationManager = CLLocationManager()
     private var userLocation = CLLocation()
+    private var geocoder = KPRGeocoder()
+    
+    let loc = RTUserLocation.sharedInstance
     
     /*
      ██╗   ██╗ ██████╗    ███████╗████████╗██╗   ██╗███████╗███████╗
@@ -75,12 +79,23 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         profileButton.layer.borderColor = buttonColor.cgColor
         profileButton.alpha = 0.9
       
+        //Display current address
+        
+        var _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.getCurrentLocationAddress), userInfo: nil, repeats: true)
+        //..getCurrentLocationAddress()
         
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showAlert(title : String, message : String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     /*
@@ -91,6 +106,34 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚██████╔╝██║    ██║  ██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
       ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
+    
+    @objc private func getCurrentLocationAddress() {
+        
+        let lat = loc.getUserLatitude()
+        let lon = loc.getUserLongitude()
+        
+        print(lat)
+        print(lon)
+        KPRGeocoder().latLongToAddress(latitude: lat, longitude: lon, completion: {(result, error) -> Void in
+            
+            if error == nil {
+                print("address: ", result!)
+                var locationName = result!.components(separatedBy: ",")
+                
+                self.currentLocationLabel.text = locationName[0]
+                
+            }
+                
+            else {
+                print(error!.description)
+            }
+            
+            
+        })
+        
+    }
+    
+    
     
     @IBAction func requestVehicle(_ sender: Any) {
         
@@ -104,10 +147,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             if (orderController.isEmptyOrder(order: newOrder)) {
                 
                 //If the order is empty, an error occured. Tell the user.
+                
+                self.showAlert(title: "Error", message: "An Error Occurred While Processing Your Order")
 
-                let alert = UIAlertController(title: "Error", message: "An Error Occurred While Processing Your Order.", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
  
                 return
             }
@@ -115,10 +157,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             let vehicle = newOrder.getVehicle()
             
-            let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
+            self.showAlert(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())")
             
-            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
             sleep(5)
             self.beginVehicleRoute(vehicle: vehicle)
             
@@ -172,8 +212,6 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ██║ ╚═╝ ██║██║  ██║██║
      ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝
      */
-    
-
     
     func initializeMapView() {
         
@@ -361,10 +399,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                     (success) in
                     
             if (success == true) {
-                print("Success")
+                self.showAlert(title: "Arrived", message: "You have arrived at your destination")
             }
             else {
-                print("Fail")
+                self.showAlert(title: "Error", message: "Your vehicle has encountered an error.")
             }
                     
      
@@ -430,9 +468,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, successHandler: @escaping (_ response: MKRoute) -> Void) {
         
         let request = MKDirectionsRequest()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
+        //request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
         
-        
+        request.source = MKMapItem.forCurrentLocation()
+                
         request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.245432, longitude: -97.751267), addressDictionary: nil))
         request.requestsAlternateRoutes = true
         request.transportType = .automobile

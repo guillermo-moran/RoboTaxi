@@ -92,7 +92,6 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 				return;
 			}
 			beginVehicleRouteSimulation($vehicleID, $routeCoordinates);
-			returnStatus("Success");
 			return;
 		}
 
@@ -264,8 +263,13 @@ function beginVehicleRouteSimulation($vehicleID, $routeString) {
 	$command = escapeshellcmd($cmd);
 	//echo $command;
 	$output = shell_exec($command);
-	echo $output;
+
+	if (strpos($output, 'SUCCESS') !== false) {
+    	returnStatus("Success");
+	}
 }
+	//echo $output;
+
 
 function getNearestAvailableVehicle($userLatitude, $userLongitude) {
 	$curl = curl_init();
