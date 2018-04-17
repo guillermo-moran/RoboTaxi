@@ -81,7 +81,7 @@ class RTVehicleController: NSObject {
         request.httpMethod = "POST"
         
         
-        let requestType = "UPDATE_VEHICLE"; // "AUTHENTICATE" is the type to request a trip/vehicle from the server
+        let requestType = "UPDATE_VEHICLE"; // "UPDATE_VEHICLE" is the type to request a trip/vehicle from the server
         let vehicleID = vehicle.getVehicleID()
         
         let postString = "request_type=\(requestType)&vehicleID=\(vehicleID)"
@@ -179,7 +179,7 @@ class RTVehicleController: NSObject {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Dictionary<String, Any>]
                 //let posts = json["posts"] as? [[String: Any]] ?? []
-                print(json)
+                //print(json)
                 
                 let count = json.count
                 

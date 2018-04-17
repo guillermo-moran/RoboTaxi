@@ -389,6 +389,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     }
     
     
+    
+    
     func placeVehicleOnMap(vehicle : RTVehicle, isUserVehicle : Bool) {
         
         for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
@@ -486,6 +488,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
     */
     
+   
+    
     func summonVehicle(vehicle : RTVehicle, userDestination : MKMapItem) {
         
         //let vehicle = self.annotationWithVehicleID(id: 1)
@@ -506,19 +510,22 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
                 
                 /*
-                let alertController = UIAlertController(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.", preferredStyle: .alert)
+                let alertController = UIAlertController(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.", preferredStyle: .actionSheet)
                 
                 // Create the actions
                 let okAction = UIAlertAction(title: "Begin Trip", style: UIAlertActionStyle.default) {
                     UIAlertAction in
                     
-                    self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
+                    //DispatchQueue.main.async {
+                    self.beginVehicleRoute(vehicle: self.vehicle, destination: self.destination)
+                    //}
+                    print("START TRIP")
                     
                 }
-                let cancelAction = UIAlertAction(title: "Cancel Trip", style: UIAlertActionStyle.cancel) {
+                let cancelAction = UIAlertAction(title: "Cancel Trip", style: .destructive) {
                     UIAlertAction in
                     
-                    self.showAlert(title: "Cancelled", message: "Your trip has been cancelled.")
+                    //self.showAlert(title: "Cancelled", message: "Your trip has been cancelled.")
                 }
                 
                 // Add the actions
@@ -528,6 +535,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 // Present the controller
                 self.present(alertController, animated: true, completion: nil)
                 */
+                
                 
             }
             else {
@@ -539,6 +547,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     }
     
     func beginVehicleRoute(vehicle : RTVehicle, destination : MKMapItem) {
+        
+        print ("Starting route...")
     
         //let vehicle = self.annotationWithVehicleID(id: 1)
         
@@ -581,6 +591,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, source : MKMapItem, destination : MKMapItem) -> String {
         
+        print ("Requesting route")
         var coordinatesString = ""
         
         let sem = DispatchSemaphore(value: 0)
@@ -626,6 +637,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, source : MKMapItem, destination : MKMapItem, successHandler: @escaping (_ response: MKRoute) -> Void) {
         
+        print ("generating route")
+        
         let request = MKDirectionsRequest()
         //request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
         
@@ -641,6 +654,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         let directions = MKDirections(request: request)
         
+        
         directions.calculate { [unowned self] response, error in
             guard let unwrappedResponse = response else { return }
             
@@ -653,6 +667,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                // self.mainMapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
             }
             */
+            print ("calculating directions")
             let route = unwrappedResponse.routes[0]
             
             //Delayer.delay(bySeconds: 1) {
@@ -661,6 +676,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             self.mainMapView.add(route.polyline)
             //}
             // Return the new order and vehicle
+            print("route generated")
             successHandler(route as MKRoute!)
         }
         
