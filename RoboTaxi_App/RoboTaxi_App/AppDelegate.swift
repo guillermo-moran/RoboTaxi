@@ -22,8 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Theme Stuff
         UIApplication.shared.statusBarStyle = .lightContent
         
-        
-        
         UINavigationBar.appearance().barTintColor = barColor
         
         UIBarButtonItem.appearance().tintColor = barTint

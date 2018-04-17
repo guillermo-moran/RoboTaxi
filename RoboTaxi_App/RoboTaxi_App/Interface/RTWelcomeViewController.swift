@@ -63,26 +63,10 @@ class RTWelcomeViewController: UIViewController {
     
     @IBAction func signupButtonPressed(_ sender: Any) {
         
-        if let url = URL(string: "http://malkhud2.create.stedwards.edu/wego/register.php") {
-            UIApplication.shared.open(url, options: [:])
-        }
-        
-        
-        
-        
-        
-        
-        /*
-        let goToRegisterViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTRegisterViewController") as! RTRegisterViewController
-        
-        self.present(goToRegisterViewController, animated: true, completion: nil)
-        */
-        // alert for non-implemented register view (deprecated)
-        /*
         let alert = UIAlertController(title: "Coming Soon!", message: "This feature is still being worked on.", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
-        */
+        
         
     }
     
