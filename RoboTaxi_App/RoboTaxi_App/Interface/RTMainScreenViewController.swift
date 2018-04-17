@@ -24,6 +24,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     @IBOutlet weak var searchField: UITextField!
     
+    @IBOutlet weak var loadingView: UIView!
     
     private var locationManager = CLLocationManager()
     private var userLocation = CLLocation()
@@ -49,6 +50,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        hideLoading()
         
         // Do any additional setup after loading the view.
         initializeMapView()
@@ -95,6 +98,13 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         // Dispose of any resources that can be recreated.
     }
     
+    func showLoading() {
+        loadingView.isHidden = false
+    }
+    func hideLoading() {
+        loadingView.isHidden = true
+    }
+    
     func showAlert(title : String, message : String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
@@ -137,10 +147,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
     }
     
-    
-    
     func requestVehicle(destination : MKMapItem) {
         
+        showLoading()
         
         let orderController = RTVehicleOrderController.sharedInstance
         
@@ -154,6 +163,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 
                 self.showAlert(title: "Error", message: "An Error Occurred While Processing Your Order")
 
+                DispatchQueue.main.sync {
+                    self.hideLoading()
+                }
  
                 return
             }
@@ -163,10 +175,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             self.showAlert(title: "RoboTaxi", message: "Your vehicle is on it's way! \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())")
             
+            DispatchQueue.main.sync {
+                self.hideLoading()
+            }
+            
             sleep(5)
             self.summonVehicle(vehicle: vehicle, userDestination: destination)
-
+            
         })
+        
+        
         
     }
     
@@ -485,8 +503,32 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             if (success == true) {
                 self.showAlert(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.")
                 
-                
                 self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
+                
+                /*
+                let alertController = UIAlertController(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.", preferredStyle: .alert)
+                
+                // Create the actions
+                let okAction = UIAlertAction(title: "Begin Trip", style: UIAlertActionStyle.default) {
+                    UIAlertAction in
+                    
+                    self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
+                    
+                }
+                let cancelAction = UIAlertAction(title: "Cancel Trip", style: UIAlertActionStyle.cancel) {
+                    UIAlertAction in
+                    
+                    self.showAlert(title: "Cancelled", message: "Your trip has been cancelled.")
+                }
+                
+                // Add the actions
+                alertController.addAction(okAction)
+                alertController.addAction(cancelAction)
+                
+                // Present the controller
+                self.present(alertController, animated: true, completion: nil)
+                */
+                
             }
             else {
                 self.showAlert(title: "Error", message: "Your vehicle has encountered an error.")
@@ -575,7 +617,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     }
     
     private func removeAllRoutes() {
-        
+        for overlay in mainMapView.overlays {
+            
+            mainMapView.remove(overlay)
+            
+        }
     }
     
     private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, source : MKMapItem, destination : MKMapItem, successHandler: @escaping (_ response: MKRoute) -> Void) {
@@ -611,6 +657,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             //Delayer.delay(bySeconds: 1) {
             self.removeAllRoutes()
+            
             self.mainMapView.add(route.polyline)
             //}
             // Return the new order and vehicle

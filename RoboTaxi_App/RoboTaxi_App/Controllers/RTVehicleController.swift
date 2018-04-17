@@ -179,7 +179,7 @@ class RTVehicleController: NSObject {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Dictionary<String, Any>]
                 //let posts = json["posts"] as? [[String: Any]] ?? []
-               // print(json)
+                print(json)
                 
                 let count = json.count
                 
