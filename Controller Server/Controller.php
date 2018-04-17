@@ -25,6 +25,7 @@ $requestType 		= $_POST["request_type"];
 	UPDATE_VEHICLE	- Update vehicle location
 	VEHICLE_LIST	- List of all nearby vehicles
 	ROUTE_VEHICLE	- Begin vehicle route simulation
+	
 
 */
 
@@ -87,6 +88,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 			beginVehicleRouteSimulation($vehicleID, $routeCoordinates);
 			return;
 		}
+
 
 		returnStatus("Invalid request type");
 
