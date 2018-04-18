@@ -38,11 +38,36 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 
 function authenticate($userName, $userPass) {
     /* Implement Mohammed's authentication later */
-    return true;
+    // Get cURL resource
+    $curl = curl_init();
+    // Set some options - we are passing in a useragent too here
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://malkhud2.create.stedwards.edu/user/authenticate.php',
+        CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => array(
+            'user_name' 		=> $user_name,
+            'password' 			=> $user_password
+        )
+    ));
+
+    $jsonResp = curl_exec($curl);
+
+    curl_close($curl);
+
+    $array = json_decode($jsonResp, true); //'true' returns an array instead of a json object
+
+	if ($array['status'] === "Logged In") {
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
 
 function createNewOrder($user_name, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
-
 
 
     $vehicleInfo = getNearestAvailableVehicle($userLatitude, $userLongitude);
@@ -109,12 +134,9 @@ function createDummyOrder($user_name, $user_password, $user_date, $userLatitude,
 
 }
 
-
+/*
 function getNearestAvailableVehicle($userLatitude, $userLongitude) {
 
-    /*
-    We'll return vehicle id 1 from Marcus' server for now :)
-    */
 
     $curl = curl_init();
 
@@ -129,6 +151,61 @@ function getNearestAvailableVehicle($userLatitude, $userLongitude) {
     curl_close($curl);
 
     return json_decode($jsonResp, true); //'true' returns an array instead of a json object
+}
+*/
+
+function returnUpdatedVehicleInfoArray($vehicleID, $requestType) {
+
+	$curl = curl_init();
+
+ 	curl_setopt_array($curl, array(
+ 	    CURLOPT_RETURNTRANSFER => 1,
+ 	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID='.$vehicleID,
+ 	    CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+ 	));
+
+ 	$jsonResp = curl_exec($curl);
+
+ 	curl_close($curl);
+
+ 	return json_decode($jsonResp, true); //'true' returns an array instead of a json object
+
+}
+
+function getNearestAvailableVehicle($userLatitude, $userLongitude) {
+	$curl = curl_init();
+
+	$vehicle = getAvailableRandomVehicle();
+
+	curl_setopt_array($curl, array(
+	    CURLOPT_RETURNTRANSFER => 1,
+	    CURLOPT_URL => 'https://meicher.create.stedwards.edu/WeGoVehicleDB/getVehicle.php?vehicleID=' . $vehicle,
+	    CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0'
+	));
+
+	$jsonResp = curl_exec($curl);
+
+	curl_close($curl);
+
+	return json_decode($jsonResp, true); //'true' returns an array instead of a json object
+}
+
+function getAvailableRandomVehicle() {
+
+	$availableVehicleIDs = array();
+
+	for ($x = 1; $x < 1024; $x++) {
+
+		$vehicle = returnUpdatedVehicleInfoArray($x, nil);
+		if (is_null($vehicle)) {
+			break;
+		}
+		if ($vehicle['inUse'] == 0) {
+			array_push($availableVehicleIDs, $x);
+		}
+
+	}
+	return $availableVehicleIDs[array_rand($availableVehicleIDs)];
 }
 
 function returnStatus($message) {

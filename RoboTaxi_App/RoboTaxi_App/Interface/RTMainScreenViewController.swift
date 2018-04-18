@@ -11,8 +11,6 @@ import UIKit
 import MapKit
 import AVFoundation
 
-
-
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     private var visibleVehicles : [RTVehicle] = []
@@ -783,7 +781,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-        renderer.strokeColor = UIColor.blue
+        renderer.strokeColor = UIColor(red:1.00, green:0.50, blue:0.23, alpha:1.0)
         return renderer
     }
     
