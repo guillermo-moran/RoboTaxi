@@ -200,7 +200,7 @@ function getAvailableRandomVehicle() {
 		if (is_null($vehicle)) {
 			break;
 		}
-		if ($vehicle['inUse'] == 0) {
+		if ($vehicle['inUse'] == 0 && $vehicle['inService'] == 1) {
 			array_push($availableVehicleIDs, $x);
 		}
 
