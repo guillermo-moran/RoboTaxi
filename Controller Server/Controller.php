@@ -25,7 +25,7 @@ $requestType 		= $_POST["request_type"];
 	UPDATE_VEHICLE	- Return updated vehicle information
 	VEHICLE_LIST	- List of all nearby vehicles
 	ROUTE_VEHICLE	- Begin vehicle route simulation
-	
+
 
 */
 
@@ -301,7 +301,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 	*/
 
 	//This is a temporary placeholder.
-
+	/*
 	if ($user_name === "user" && $user_password === "password") {
 		if ($requestType === "AUTHENTICATE") {
 			returnStatus("Authenticated");
@@ -314,8 +314,9 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 		}
 		return false;
 	}
+	*/
 
-	/*
+
     // Get cURL resource
     $curl = curl_init();
     // Set some options - we are passing in a useragent too here
@@ -325,8 +326,8 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
         CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
         CURLOPT_POST => 1,
         CURLOPT_POSTFIELDS => array(
-            'username' 		=> $user_name,
-            'password' 		=> $user_password
+            'user_name' 		=> $user_name,
+            'password' 			=> $user_password
         )
     ));
 
@@ -336,13 +337,23 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 
     $array = json_decode($jsonResp, true); //'true' returns an array instead of a json object
 
-	if ($array['status'] === "success") {
+	if ($array['status'] === "Logged In") {
+
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authenticated");
+		}
+
 		return true;
 	}
 	else {
+		
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authentication Failure");
+		}
+
 		return false;
 	}
-	*/
+
 
 }
 
