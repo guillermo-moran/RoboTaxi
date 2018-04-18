@@ -55,5 +55,3 @@ else
 }
 
 $mysqli -> close();
-
-

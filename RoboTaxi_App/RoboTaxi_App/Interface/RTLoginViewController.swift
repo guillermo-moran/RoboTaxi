@@ -13,8 +13,30 @@ class RTLoginViewController: UIViewController {
     @IBOutlet weak var userName_textField: UITextField!
     @IBOutlet weak var password_textField: UITextField!
     
+    @IBOutlet weak var loginButton: UIButton!
+    
+    @IBOutlet weak var backButton: UIButton!
+    
+    @IBAction func dismissView(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let buttonColor = loginButton.titleLabel?.textColor
+        let cornerRadius = CGFloat(10)
+        let borderWidth = CGFloat(1)
+        
+        loginButton.backgroundColor = .clear
+        loginButton.layer.cornerRadius = cornerRadius
+        loginButton.layer.borderWidth = borderWidth
+        loginButton.layer.borderColor = buttonColor?.cgColor
+        
+        backButton.backgroundColor = .clear
+        backButton.layer.cornerRadius = cornerRadius
+        backButton.layer.borderWidth = borderWidth
+        backButton.layer.borderColor = buttonColor?.cgColor
         
         // Do any additional setup after loading the view.
     }

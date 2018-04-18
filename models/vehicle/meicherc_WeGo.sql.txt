@@ -1,0 +1,68 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.7
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Erstellungszeit: 10. Apr 2018 um 15:55
+-- Server-Version: 5.5.56-cll-lve
+-- PHP-Version: 5.6.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Datenbank: `meicherc_WeGo`
+--
+CREATE DATABASE IF NOT EXISTS `meicherc_WeGo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `meicherc_WeGo`;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `WeGoVehicleDB`
+--
+
+CREATE TABLE `WeGoVehicleDB` (
+  `vehicleID` int(11) NOT NULL,
+  `ownerID` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `inService` tinyint(1) NOT NULL,
+  `inUse` tinyint(1) NOT NULL,
+  `currentLatitude` decimal(10,8) NOT NULL,
+  `currentLongitude` decimal(10,8) NOT NULL,
+  `lastUpdate` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `WeGoVehicleDB`
+--
+
+INSERT INTO `WeGoVehicleDB` (`vehicleID`, `ownerID`, `capacity`, `inService`, `inUse`, `currentLatitude`, `currentLongitude`, `lastUpdate`) VALUES
+(1, 1, 4, 1, 0, '30.22828600', '-97.75381000', '2018-04-02 21:47:49'),
+(2, 1, 4, 1, 0, '30.23915500', '-97.75515200', '2018-04-02 21:48:04'),
+(3, 1, 4, 1, 0, '30.22072000', '-97.75447600', '2018-04-02 21:48:16'),
+(4, 1, 4, 1, 1, '30.32418200', '-97.82676700', '2018-04-02 21:48:24'),
+(5, 2, 10, 1, 0, '30.22646500', '-97.76878800', '2018-04-05 15:10:55');
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `WeGoVehicleDB`
+--
+ALTER TABLE `WeGoVehicleDB`
+  ADD PRIMARY KEY (`vehicleID`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

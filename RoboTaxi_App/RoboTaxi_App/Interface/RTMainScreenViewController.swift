@@ -9,10 +9,15 @@
 
 import UIKit
 import MapKit
+import AVFoundation
+
+
 
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     private var visibleVehicles : [RTVehicle] = []
+    
+    var player: AVAudioPlayer?
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
     
@@ -20,10 +25,88 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     @IBOutlet weak var profileButton: UIButton!
     @IBOutlet weak var mainMapView: MKMapView!
     @IBOutlet weak var requestVehicleButton: UIButton!
+    @IBOutlet weak var currentLocationLabel: UILabel!
     
+    @IBOutlet weak var searchField: UITextField!
+    
+    @IBOutlet weak var loadingView: UIView!
+    
+    @IBOutlet weak var notificationView: UIView!
+    @IBOutlet weak var notificationViewTitle : UILabel!
+    @IBOutlet weak var notificationViewSubtitle : UITextView!
+    @IBOutlet weak var notificationViewCarID : UILabel!
+    @IBOutlet weak var notificationBeginTripButton : UIButton!
+    @IBOutlet weak var notificationViewDismissButton : UIButton!
+
+
     
     private var locationManager = CLLocationManager()
     private var userLocation = CLLocation()
+    private var geocoder = KPRGeocoder()
+    private var currentVehicle = RTVehicle()
+    private var currentDestination = MKMapItem()
+    
+    
+    
+    let loc = RTUserLocation.sharedInstance
+    
+    /*
+     ███╗   ██╗ ██████╗ ████████╗██╗███████╗    ██╗   ██╗██╗███████╗██╗    ██╗
+     ████╗  ██║██╔═══██╗╚══██╔══╝██║██╔════╝    ██║   ██║██║██╔════╝██║    ██║
+     ██╔██╗ ██║██║   ██║   ██║   ██║█████╗      ██║   ██║██║█████╗  ██║ █╗ ██║
+     ██║╚██╗██║██║   ██║   ██║   ██║██╔══╝      ╚██╗ ██╔╝██║██╔══╝  ██║███╗██║
+     ██║ ╚████║╚██████╔╝   ██║   ██║██║          ╚████╔╝ ██║███████╗╚███╔███╔╝
+     ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝╚═╝           ╚═══╝  ╚═╝╚══════╝ ╚══╝╚══╝
+ */
+    
+    func playSound() {
+        guard let url = Bundle.main.url(forResource: "ding", withExtension: "mp3") else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            let player = try AVAudioPlayer(contentsOf: url)
+            
+            player.play()
+            
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func displayNotificationView(title : String, subtitle : String, carID : String, isCarNotification : Bool, dismissButtonTitle : String) {
+        
+        print ("DISPLAYING NOTIF VIEW")
+        
+        self.playSound()
+        
+        self.notificationView.isHidden = false
+        
+        notificationViewTitle.text = title
+        notificationViewSubtitle.text = subtitle
+        notificationViewCarID.text = carID
+        notificationViewDismissButton.titleLabel!.text = "Cancel"
+        
+        if (isCarNotification) {
+            notificationBeginTripButton.isHidden = false
+        }
+        else {
+            notificationBeginTripButton.isHidden = true
+        }
+    }
+    
+    @IBAction func dismissDisplayNotification() {
+        self.notificationView.isHidden = true
+    }
+    @IBAction func beginTripPressed(_ sender: Any) {
+        
+        DispatchQueue.global().async {
+            self.beginVehicleRoute(vehicle: self.currentVehicle, destination: self.currentDestination)
+        }
+        
+        self.dismissDisplayNotification()
+    }
     
     /*
      ██╗   ██╗ ██████╗    ███████╗████████╗██╗   ██╗███████╗███████╗
@@ -44,6 +127,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        hideLoading()
+        
         // Do any additional setup after loading the view.
         initializeMapView()
         UIApplication.shared.statusBarStyle = .default
@@ -53,12 +138,14 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         let cornerRadius = CGFloat(10)
         let borderWidth = CGFloat(1)
         
+        /*
         requestVehicleButton.titleLabel?.textColor = .white
         requestVehicleButton.backgroundColor = barColor
         requestVehicleButton.layer.cornerRadius = cornerRadius
         requestVehicleButton.layer.borderWidth = borderWidth
         requestVehicleButton.layer.borderColor = buttonColor.cgColor
         requestVehicleButton.alpha = 0.9
+        */
         
         //Current Location Bar View
         currentLocationBarView.layer.cornerRadius = cornerRadius
@@ -75,12 +162,30 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         profileButton.layer.borderColor = buttonColor.cgColor
         profileButton.alpha = 0.9
       
+        //Display current address
+        
+        var _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.getCurrentLocationAddress), userInfo: nil, repeats: true)
+        //..getCurrentLocationAddress()
         
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showLoading() {
+        loadingView.isHidden = false
+    }
+    func hideLoading() {
+        loadingView.isHidden = true
+    }
+    
+    func showAlert(title : String, message : String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     /*
@@ -92,8 +197,35 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
       ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
     
-    @IBAction func requestVehicle(_ sender: Any) {
+    @objc private func getCurrentLocationAddress() {
         
+        let lat = loc.getUserLatitude()
+        let lon = loc.getUserLongitude()
+        
+        print(lat)
+        print(lon)
+        KPRGeocoder().latLongToAddress(latitude: lat, longitude: lon, completion: {(result, error) -> Void in
+            
+            if error == nil {
+                print("address: ", result!)
+                var locationName = result!.components(separatedBy: ",")
+                
+                self.currentLocationLabel.text = locationName[0]
+                
+            }
+                
+            else {
+                print(error!.description)
+            }
+            
+            
+        })
+        
+    }
+    
+    func requestVehicle(destination : MKMapItem) {
+        
+        showLoading()
         
         let orderController = RTVehicleOrderController.sharedInstance
         
@@ -104,10 +236,12 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             if (orderController.isEmptyOrder(order: newOrder)) {
                 
                 //If the order is empty, an error occured. Tell the user.
+                
+                self.showAlert(title: "Error", message: "An Error Occurred While Processing Your Order")
 
-                let alert = UIAlertController(title: "Error", message: "An Error Occurred While Processing Your Order.", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                DispatchQueue.main.sync {
+                    self.hideLoading()
+                }
  
                 return
             }
@@ -115,30 +249,18 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             
             let vehicle = newOrder.getVehicle()
             
-            let alert = UIAlertController(title: "RoboTaxi", message: "Your vehicle has arrived! Please make your way to the blue vehicle on the map. \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())", preferredStyle: UIAlertControllerStyle.alert)
+            self.showAlert(title: "RoboTaxi", message: "Your vehicle is on it's way! \n\n Vehicle Number: \(vehicle.getVehicleID()) \n Capacity: \(vehicle.getCapacity())")
             
-            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-           self.present(alert, animated: true, completion: nil)
-
-        
-            
-            
-            let main = DispatchQueue.main
-            //let animator = DispatchQueue(label: "animator")
- 
-            
-            main.async {
-                
-                //let vehicle = self.annotationWithVehicleID(id: 1)
-                
-                self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true)
-                
-                
-                
-               // self.moveCar(vehicle: vehicle, destinationCoordinate: CLLocationCoordinate2DMake(30.245432,  -97.751267))
+            DispatchQueue.main.sync {
+                self.hideLoading()
             }
             
+            sleep(5)
+            self.summonVehicle(vehicle: vehicle, userDestination: destination)
+            
         })
+        
+        
         
     }
     
@@ -148,6 +270,59 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             self.dismiss(animated: true, completion: nil)
         }
         //Log out for now
+    }
+    
+    /*
+ ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗
+ ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║
+ ███████╗█████╗  ███████║██████╔╝██║     ███████║
+ ╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║
+ ███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║
+ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+ */
+    
+    
+    var matchingItems: [MKMapItem] = [MKMapItem]()
+    
+    @IBAction func searchFieldReturn(_ sender: AnyObject) {
+        _ = sender.resignFirstResponder()
+        mainMapView.removeAnnotations(mainMapView.annotations)
+        self.performSearch()
+    }
+    
+    func performSearch() {
+        
+        matchingItems.removeAll()
+        let request = MKLocalSearchRequest()
+        request.naturalLanguageQuery = searchField.text
+        request.region = mainMapView.region
+        
+        let search = MKLocalSearch(request: request)
+        
+        search.start(completionHandler: {(response, error) in
+            
+            if error != nil {
+                print("Error occured in search: \(error!.localizedDescription)")
+            } else if response!.mapItems.count == 0 {
+                print("No matches found")
+            } else {
+                print("Matches found")
+                
+                for item in response!.mapItems {
+                    print("Name = \(item.name)")
+                    print("Phone = \(item.phoneNumber)")
+                    
+                    self.matchingItems.append(item as MKMapItem)
+                    print("Matching items = \(self.matchingItems.count)")
+                    
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = item.placemark.coordinate
+                    annotation.title = item.name
+                    annotation.subtitle = "Tap + to request a ride"
+                    self.mainMapView.addAnnotation(annotation)
+                }
+            }
+        })
     }
     
     
@@ -209,7 +384,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         //Refresh map vehicles every 2 minutes
         
-        var _ = Timer.scheduledTimer(timeInterval: 240, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
+        
+        var _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
+        
+        //var _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.refreshVehicle), userInfo: nil, repeats: true)
+        //refreshVehicle(vehicle: visibleVehicles[0])
         
         
     }
@@ -223,12 +402,20 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
     */
     
-    private func annotationWithVehicleID(id : Int) -> RTVehicleAnnotation {
+    private func removeAllVehiclesFromMap() {
+        for annotation in mainMapView.annotations {
+            if (annotation.isKind(of: RTVehicleAnnotation.self)) {
+                mainMapView.removeAnnotation(annotation)
+            }
+        }
+    }
+    
+    private func getAnnotationWithVehicle(vehicle : RTVehicle) -> RTVehicleAnnotation {
         
         var index = 0
         for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
             
-            if existingAnnotation.vehicleID == id {
+            if existingAnnotation.vehicleID == vehicle.getVehicleID() {
                 index+=1
                 existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
                 existingAnnotation.title = "Your Vehicle"
@@ -254,6 +441,13 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             if pinAnnotationView == nil {
                 pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "DefaultPinView")
             }
+            pinAnnotationView?.canShowCallout = true
+            
+            
+            let rightButton = UIButton(type: .contactAdd)
+            rightButton.tag = annotation.hash
+            
+            pinAnnotationView?.rightCalloutAccessoryView = rightButton
             return pinAnnotationView
         }
         
@@ -271,15 +465,24 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     }
     
     
+    
+    
     func placeVehicleOnMap(vehicle : RTVehicle, isUserVehicle : Bool) {
         
         for case let existingAnnotation as RTVehicleAnnotation in self.mainMapView.annotations {
             
             if existingAnnotation.vehicleID == vehicle.getVehicleID() {
                 
-                existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
-                existingAnnotation.title = "Your Vehicle"
-                existingAnnotation.subtitle = "On it's way!"
+                if (isUserVehicle) {
+                    existingAnnotation.image = #imageLiteral(resourceName: "blue_car")
+                    existingAnnotation.title = "Your Vehicle"
+                    existingAnnotation.subtitle = "On it's way!"
+                }
+                else {
+                    existingAnnotation.image = #imageLiteral(resourceName: "vehicle_icon")
+                    existingAnnotation.title = "Vehicle"
+                    existingAnnotation.subtitle = "Available"
+                }
                 
                 mainMapView.removeAnnotation(existingAnnotation)
                 mainMapView.addAnnotation(existingAnnotation)
@@ -311,7 +514,9 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     @objc func loadAllVehicleAnnotations() {
         
-        mainMapView.removeAnnotations(mainMapView.annotations)
+        //mainMapView.removeAnnotations(mainMapView.annotations)
+        self.removeAllVehiclesFromMap()
+        self.visibleVehicles = []
         
         let background = DispatchQueue.global()
         let main = DispatchQueue.main
@@ -325,10 +530,29 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 for vehicle in availableVehicles {
                     
                     self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: false)
+                    self.visibleVehicles.append(vehicle)
                     
                 }
             }
         }
+    }
+    
+    @objc func refreshVehicle(vehicle : RTVehicle) {
+        let updatedVehicle = RTVehicleController.sharedInstance.returnUpdatedVehicle(vehicle: vehicle)
+        
+        let annotation = getAnnotationWithVehicle(vehicle: updatedVehicle)
+        
+        annotation.coordinate = CLLocationCoordinate2DMake(updatedVehicle.getCurrentLatitude(), updatedVehicle.getCurrentLongitude())
+        
+        mainMapView.removeAnnotation(annotation)
+        mainMapView.addAnnotation(annotation)
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        let item = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake((view.annotation?.coordinate.latitude)!, (view.annotation?.coordinate.longitude)!), addressDictionary: nil))
+        
+        requestVehicle(destination: item)
     }
     
     /*
@@ -340,7 +564,102 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
     */
     
+   
     
+    func summonVehicle(vehicle : RTVehicle, userDestination : MKMapItem) {
+        
+        //let vehicle = self.annotationWithVehicleID(id: 1)
+        
+        let vehicleSource = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(vehicle.getCurrentLatitude(), vehicle.getCurrentLongitude()), addressDictionary: nil))
+        
+        let vehicleDestination = MKMapItem.forCurrentLocation()
+        
+        let cString = self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true, source: vehicleSource, destination: vehicleDestination)
+        
+        
+        RTVehicleController.sharedInstance.requestVehicleRoute(vehicle: vehicle, routeCoordinateString: cString, successHandler: {
+            (success) in
+            
+            if (success == true) {
+                //self.showAlert(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.")
+                
+                self.currentVehicle = vehicle
+                self.currentDestination = userDestination
+                
+                DispatchQueue.main.sync {
+                    self.displayNotificationView(title: "Your Vehicle has Arrived!", subtitle: "Please make your way to your vehicle marked with the number \(vehicle.getVehicleID())\n\n Once you are inside the vehicle, press \"Begin Trip\"", carID: String(vehicle.getVehicleID()), isCarNotification: true, dismissButtonTitle: "Cancel Trip")
+                }
+                
+                
+                
+                
+                //self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
+                
+                /*
+                let alertController = UIAlertController(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.", preferredStyle: .actionSheet)
+                
+                // Create the actions
+                let okAction = UIAlertAction(title: "Begin Trip", style: UIAlertActionStyle.default) {
+                    UIAlertAction in
+                    
+                    //DispatchQueue.main.async {
+                    self.beginVehicleRoute(vehicle: self.vehicle, destination: self.destination)
+                    //}
+                    print("START TRIP")
+                    
+                }
+                let cancelAction = UIAlertAction(title: "Cancel Trip", style: .destructive) {
+                    UIAlertAction in
+                    
+                    //self.showAlert(title: "Cancelled", message: "Your trip has been cancelled.")
+                }
+                
+                // Add the actions
+                alertController.addAction(okAction)
+                alertController.addAction(cancelAction)
+                
+                // Present the controller
+                self.present(alertController, animated: true, completion: nil)
+                */
+                
+                
+            }
+            else {
+                self.showAlert(title: "Error", message: "Your vehicle has encountered an error.")
+            }
+            
+        })
+        
+    }
+    
+    func beginVehicleRoute(vehicle : RTVehicle, destination : MKMapItem) {
+        
+        print ("Starting route...")
+    
+        //let vehicle = self.annotationWithVehicleID(id: 1)
+        
+        let source = MKMapItem.forCurrentLocation()
+            
+        let cString = self.requestVehicleRoute(vehicle: vehicle, isUserVehicle: true, source: source, destination: destination)
+            
+        
+        RTVehicleController.sharedInstance.requestVehicleRoute(vehicle: vehicle, routeCoordinateString: cString, successHandler: {
+                    (success) in
+                    
+            if (success == true) {
+                //self.showAlert(title: "Arrived", message: "You have arrived at your destination")
+                DispatchQueue.main.sync {
+                    self.displayNotificationView(title: "You Have Arrived", subtitle: "Before leaving the vehicle, please make sure you collect your belongings.\n\n Total Charges: $0.00", carID: String(vehicle.getVehicleID()), isCarNotification: false, dismissButtonTitle: "End Trip")
+                }
+            }
+            else {
+                self.showAlert(title: "Error", message: "Your vehicle has encountered an error.")
+            }
+                    
+     
+        })
+        
+    }
     
     func moveCar(vehicle : RTVehicleAnnotation, destinationCoordinate : CLLocationCoordinate2D) {
         
@@ -359,17 +678,19 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
     }
     
-    func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool) {
+    func requestVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, source : MKMapItem, destination : MKMapItem) -> String {
         
-        let annotation = RTVehicleAnnotation()
-    
+        print ("Requesting route")
+        var coordinatesString = ""
+        
+        let sem = DispatchSemaphore(value: 0)
         
         DispatchQueue.main.async {
             self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: isUserVehicle)
         }
         
         
-        generateVehicleRoute(vehicle: vehicle, isUserVehicle: isUserVehicle, successHandler: {
+        generateVehicleRoute(vehicle: vehicle, isUserVehicle: isUserVehicle, source: source, destination: destination, successHandler: {
             (route) in
             
             let pointCount = route.polyline.pointCount
@@ -380,29 +701,48 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 for i in 0 ... pointCount - 1 {
                     //print("aaa")
                         let coordinate = MKCoordinateForMapPoint(route.polyline.points()[i])
-                        annotation.coordinate = coordinate
+                        //annotation.coordinate = coordinate
+                        coordinatesString += "\(coordinate.latitude) \(coordinate.longitude) "
                     
                 }
+                sem.signal()
             }
         })
         
         //let coordinate = MKCoordinateForMapPoint(route.polyline.points()[pointCount - 1])
         //moveCar(vehicle: annotation, destinationCoordinate: coordinate)
+        let _ = sem.wait(timeout: RTNetworkController.requestTimeout)
+        return coordinatesString
         
     }
     
+    private func removeAllRoutes() {
+        for overlay in mainMapView.overlays {
+            
+            mainMapView.remove(overlay)
+            
+        }
+    }
     
-    private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, successHandler: @escaping (_ response: MKRoute) -> Void) {
+    private func generateVehicleRoute(vehicle : RTVehicle, isUserVehicle : Bool, source : MKMapItem, destination : MKMapItem, successHandler: @escaping (_ response: MKRoute) -> Void) {
+        
+        print ("generating route")
         
         let request = MKDirectionsRequest()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
+        //request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(30.228122, -97.754157), addressDictionary: nil))
         
+        //request.source = MKMapItem.forCurrentLocation()
+                
+        //request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.245432, longitude: -97.751267), addressDictionary: nil))
         
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 30.245432, longitude: -97.751267), addressDictionary: nil))
+        request.source = source
+        request.destination = destination
+        
         request.requestsAlternateRoutes = true
         request.transportType = .automobile
         
         let directions = MKDirections(request: request)
+        
         
         directions.calculate { [unowned self] response, error in
             guard let unwrappedResponse = response else { return }
@@ -416,12 +756,16 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                // self.mainMapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
             }
             */
+            print ("calculating directions")
             let route = unwrappedResponse.routes[0]
             
             //Delayer.delay(bySeconds: 1) {
+            self.removeAllRoutes()
+            
             self.mainMapView.add(route.polyline)
             //}
             // Return the new order and vehicle
+            print("route generated")
             successHandler(route as MKRoute!)
         }
         

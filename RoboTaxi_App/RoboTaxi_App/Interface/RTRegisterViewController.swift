@@ -2,93 +2,86 @@
 //  RTRegisterViewController.swift
 //  RoboTaxi_App
 //
-//  Created by Eduardo Perez on 4/16/18.
+//  Created by Guillermo Moran on 2/3/18.
 //  Copyright © 2018 WeGo. All rights reserved.
 //
 
 import UIKit
-import WebKit
 
-class RTRegisterViewController: UIViewController, WKUIDelegate {
-
-    var webView: WKWebView!
+class RTRegisterViewController: UIViewController, UIWebViewDelegate {
     
-    @IBOutlet weak var embeddedRegister_webKitView: WKWebView!
+    @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     
-    // define URL constant
-    //let URL_USER_REGISTER = URL(string: "http://malkhud2.create.stedwards.edu/wego/register.php")!
     
+    @IBAction func dismiss(_ sender: Any) {
+        
+        self.dismiss(animated: true, completion: nil)
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // this MIGHT not work
-        self.automaticallyAdjustsScrollViewInsets = false
         
-        webView = WKWebView(frame: embeddedRegister_webKitView.frame, configuration: WKWebViewConfiguration() )
-        self.embeddedRegister_webKitView.addSubview(webView)
-        self.webView.allowsBackForwardNavigationGestures = true
-        let myURL = URL(string: "http://www.malkhud2.create.stedwards.edu/wego/register.php")
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
+        let url = URL(string: "https://malkhud2.create.stedwards.edu/wego/register.php")!
+        let myRequest = URLRequest(url: url)
+//        UserDefaults.standard.register(defaults: ["UserAgent": "Custom-Agent"])
+        webView.delegate = self
+        webView.loadRequest(myRequest)
         
+        //let x =
+        
+        
+        webView.scalesPageToFit = false
+        
+        //webView.scrollView.setZoomScale(1.5, animated: false)
+        
+        
+        
+
+        // Do any additional setup after loading the view.
     }
     
-    
-    @IBAction func doneWithRegisGoToLogin_button(_ sender: Any) {
-        
-        // segue to login screen after successful sign up
-        let goToRTLoginViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTLoginViewController") as! RTLoginViewController
-        
-        // take us to the login
-        self.present(goToRTLoginViewController, animated: true, completion: nil)
+    func webViewDidStartLoad(_ webView: UIWebView) {
+        loadingIndicator.startAnimating()
     }
     
-    /*
-
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        webView.stringByEvaluatingJavaScript(from: "var style = document.createElement('style'); style.innerHTML = 'form, .content { width: 80%; } .header { width: 80% }'; document.head.appendChild(style)")
+        
+        
+        loadingIndicator.stopAnimating()
+        
+        
+        if (webView.request?.url?.absoluteString == "https://malkhud2.create.stedwards.edu/wego/login.php") {
+            
+            let alertController = UIAlertController(title: "RoboTaxi", message: "Your account has been created!", preferredStyle: .alert)
+            
+            // Create the actions
+            let okAction = UIAlertAction(title: "Okay", style: UIAlertActionStyle.default) {
+                UIAlertAction in
+                
+                self.dismiss(webView)
+            }
+           
+            
+            // Add the actions
+            alertController.addAction(okAction)
+            
+            
+            // Present the controller
+            self.present(alertController, animated: true, completion: nil)
+            
+            
+        }
+    }
     
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func button_Register(_ sender: Any) {
-        // gets rid of keyboard
-        userName_textField.resignFirstResponder()
-        password_textField.resignFirstResponder()
-
-        // get the text from the field
-        let username = userName_textField.text!
-        let email = email_textField.text!
-        let password = password_textField!
-        
-        var request = URLRequest(url: URL_USER_REGISTER)
-        
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        // define what's POSTed to register.php
-        let postString = "user_name=\(username)&email=\(email)&password=\(password)"
-        request.httpBody = postString.data(using: .utf8)
-        // opens session
-        let task = URLSession.shared.dataTask(with: request){
-            data, response, error in guard let data = data, error == nil
-                else{
-                    print("error\(error as Optional)")
-                    return
-            }
-            // checks for http errors
-            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200{
-                print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                print("response = \(response as Optional)")
-            }
-            
-            let responseString = String(data: data, encoding: .utf8)
-            print("responseString = \(responseString as Optional)")
-        }
-        task.resume()
-
-     
-    }
-*/
+    
 }
+
+

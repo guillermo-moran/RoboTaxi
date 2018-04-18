@@ -1,15 +1,32 @@
 <?php
 
-$username = $_GET['username'];
-$password = $_GET['password'];
 
-function main($username,$password) {
-    if(isset($username, $password)) {
-        include_once userRepository::
+$user_name = $_POST['user_name'];
+$password = $_POST['password'];
 
-        $return = authenticatUserId($username, $password);
+function main($user_name,$password) {
+    if(isset($user_name, $password)) {
 
-        echo $return;
+        $db = mysqli_connect('localhost', 'malkhudc_userdb', '123456', 'malkhudc_user');
+
+
+
+        $password = md5($password);
+        $query = "SELECT * FROM user WHERE user_name='$user_name' AND password= '$password'";
+        $results = mysqli_query($db, $query);
+
+        if (mysqli_num_rows($results) == 1) {
+            $array = array(
+                'status' => 'Logged In'
+            );
+            echo json_encode($array);
+        }
+        else {
+            $array = array(
+                'status' => 'Incorrect Password'
+            );
+            echo json_encode($array);
+        }
 
     }
     else {
@@ -21,4 +38,6 @@ function main($username,$password) {
 }
 
 
-main($username,$password);
+main($user_name,$password);
+
+?>

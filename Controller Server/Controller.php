@@ -22,10 +22,10 @@ $requestType 		= $_POST["request_type"];
 	ORDER 			- Submit a vehicle and trip order
 	AUTHENTICATE 	- Request server authentication
 	PING			- Ping the server
-	UPDATE_VEHICLE	- Update vehicle location
+	UPDATE_VEHICLE	- Return updated vehicle information
 	VEHICLE_LIST	- List of all nearby vehicles
 	ROUTE_VEHICLE	- Begin vehicle route simulation
-	
+
 
 */
 
@@ -41,6 +41,8 @@ $requestType 		= $_POST["request_type"];
 
 function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID, $routeCoordinates) {
 
+	$isAuthenticated = verifyUserCredentials($user_name, $user_password, NULL);
+
 	if (isset($requestType)) {
 
 		if ($requestType === "ORDER") {
@@ -55,13 +57,10 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 		}
 		if ($requestType === "AUTHENTICATE") {
 
-
 			if (!isset($userName, $userPass)) {
 				returnStatus("Parameters not set!");
 				return;
 			}
-
-
 			verifyUserCredentials($userName, $userPass, $requestType);
 			return;
 		}
@@ -80,18 +79,25 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 			return;
 		}
 		if ($requestType == "UPDATE_VEHICLE") {
-			returnUpdatedVehicleInfoArray($vehicleID);
+			if (!isset($vehicleID)) {
+				returnStatus("Parameters not set!");
+				return;
+			}
+			returnUpdatedVehicleInfoArray($vehicleID, $requestType);
 			return;
 		}
 
 		if ($requestType == "ROUTE_VEHICLE") {
+			if (!isset($vehicleID, $routeCoordinates)) {
+				returnStatus("Parameters not set!");
+				return;
+			}
 			beginVehicleRouteSimulation($vehicleID, $routeCoordinates);
 			return;
 		}
 
 
 		returnStatus("Invalid request type");
-
 
 	}
 	else {
@@ -110,7 +116,7 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 */
 
 function requestNewOrder($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude) {
-	$newOrderWithVehicle = fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude);
+	$newOrderWithVehicle = fetchOrderFromOrderServer($user_name, $user_password, $user_date, $userLatitude, $userLongitude, $destLatitude, $destLongitude, $userDate);
 	echo $newOrderWithVehicle;
 }
 
@@ -193,7 +199,7 @@ function createDummyOrder($user_name, $user_password, $user_date, $userLatitude,
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
  */
 
-function returnUpdatedVehicleInfoArray($vehicleID) {
+function returnUpdatedVehicleInfoArray($vehicleID, $requestType) {
 
 	$curl = curl_init();
 
@@ -207,6 +213,10 @@ function returnUpdatedVehicleInfoArray($vehicleID) {
 
  	curl_close($curl);
 
+	if ($requestType == 'UPDATE_VEHICLE') {
+		echo $jsonResp;
+	}
+
  	return json_decode($jsonResp, true); //'true' returns an array instead of a json object
 
 }
@@ -217,7 +227,7 @@ function getAllNearbyVehicles($userLatitude, $userLongitude) {
 
 	for ($x = 1; $x < 1024; $x++) {
 
-		$vehicle = returnUpdatedVehicleInfoArray($x);
+		$vehicle = returnUpdatedVehicleInfoArray($x, nil);
 		if (is_null($vehicle)) {
 			break;
 		}
@@ -251,9 +261,14 @@ function getAllNearbyVehicles($userLatitude, $userLongitude) {
 }
 
 function beginVehicleRouteSimulation($vehicleID, $routeString) {
-	$command = escapeshellcmd('./Sim/VehicleSim.py 5 5 5');
+	$cmd = './Sim/VehicleSim.py' . " " . $vehicleID . " " . $routeString;
+	$command = escapeshellcmd($cmd);
+	//echo $command;
 	$output = shell_exec($command);
-	echo $output;
+
+	if (strpos($output, 'SUCCESS') !== false) {
+    	returnStatus("Success");
+	}
 }
 
 function getNearestAvailableVehicle($userLatitude, $userLongitude) {
@@ -288,7 +303,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 	*/
 
 	//This is a temporary placeholder.
-
+	/*
 	if ($user_name === "user" && $user_password === "password") {
 		if ($requestType === "AUTHENTICATE") {
 			returnStatus("Authenticated");
@@ -301,8 +316,9 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 		}
 		return false;
 	}
+	*/
 
-	/*
+
     // Get cURL resource
     $curl = curl_init();
     // Set some options - we are passing in a useragent too here
@@ -312,8 +328,8 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
         CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
         CURLOPT_POST => 1,
         CURLOPT_POSTFIELDS => array(
-            'username' 		=> $user_name,
-            'password' 		=> $user_password
+            'user_name' 		=> $user_name,
+            'password' 			=> $user_password
         )
     ));
 
@@ -323,13 +339,23 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 
     $array = json_decode($jsonResp, true); //'true' returns an array instead of a json object
 
-	if ($array['status'] === "success") {
+	if ($array['status'] === "Logged In") {
+
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authenticated");
+		}
+
 		return true;
 	}
 	else {
+
+		if ($requestType === "AUTHENTICATE") {
+			returnStatus("Authentication Failure");
+		}
+
 		return false;
 	}
-	*/
+
 
 }
 
@@ -350,6 +376,7 @@ function returnStatus($message) {
 }
 
 main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate, $requestType, $vehicleID, $routeCoordinates);
-//beginVehicleRouteSimulation(1,1);
+//beginVehicleRouteSimulation("1","30.2281019836664 -97.7541680489094 30.2279329206795 -97.7537740156412 30.22785496898 -97.7535960678369 30.2278309967369 -97.7535410825521 30.2277489379048 -97.753583075887 30.2271089795977 -97.7539240517081 30.2267819177359 -97.754085068068 30.2267329674214 -97.7541100461395 30.2269639726728 -97.7545970347139 30.2272349596023 -97.7551540121797 30.2276449184865 -97.755934032089 30.2283819392324 -97.7574690100172 30.2289569377899 -97.7587390359861 30.2293109893799 -97.7595730353518 30.2295449282974 -97.7600640472397 30.2295899391174 -97.7601540688798 30.2296319324523 -97.7602360438928 30.2303219307214 -97.7598020289465 30.2324779238552 -97.7584680490565 30.2341729961336 -97.7573950816312 30.2345649339259 -97.7571150422462 30.235529942438 -97.7563610062367 30.2371899783611 -97.7549290418985 30.2388159837574 -97.7535770409167 30.2390979509801 -97.7533080656439 30.239488966763 -97.7529960073887 30.2396469656378 -97.7529170498608 30.2399239875376 -97.7528360806762 30.2418789826334 -97.7525280457345 30.2425799611956 -97.7522930171695 30.2454199176282 -97.7512280125523");
 //getAllNearbyVehicles(2,2);
+//returnUpdatedVehicleInfoArray(1);
 ?>
