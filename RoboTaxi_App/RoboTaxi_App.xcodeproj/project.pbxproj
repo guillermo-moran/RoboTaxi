@@ -25,6 +25,7 @@
 		B3A440CD2025A9F4005DC45C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CC2025A9F4005DC45C /* Assets.xcassets */; };
 		B3A440D02025A9F4005DC45C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A440CE2025A9F4005DC45C /* LaunchScreen.storyboard */; };
 		B3A440DB2025A9F4005DC45C /* RoboTaxi_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */; };
+		B3B4EA9E2087AFC100CDBB97 /* ding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B3B4EA9D2087AFC000CDBB97 /* ding.mp3 */; };
 		B3B8D0582085684C00F03196 /* KPRGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B8D0572085684C00F03196 /* KPRGeocoder.swift */; };
 		B3BC84662060B84C0069A931 /* Delayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BC84652060B84C0069A931 /* Delayer.swift */; };
 		B3BC846F20616D400069A931 /* RTUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BC846E20616D400069A931 /* RTUserLocation.swift */; };
@@ -66,6 +67,7 @@
 		B3A440D62025A9F4005DC45C /* RoboTaxi_AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoboTaxi_AppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3A440DA2025A9F4005DC45C /* RoboTaxi_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoboTaxi_AppTests.swift; sourceTree = "<group>"; };
 		B3A440DC2025A9F4005DC45C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3B4EA9D2087AFC000CDBB97 /* ding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ding.mp3; sourceTree = "<group>"; };
 		B3B8D0572085684C00F03196 /* KPRGeocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KPRGeocoder.swift; sourceTree = "<group>"; };
 		B3BC84652060B84C0069A931 /* Delayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delayer.swift; sourceTree = "<group>"; };
 		B3BC846E20616D400069A931 /* RTUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTUserLocation.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		B3243ADC202AF7EE00D0ABD3 /* CustomMap */ = {
 			isa = PBXGroup;
 			children = (
+				B3B4EA9D2087AFC000CDBB97 /* ding.mp3 */,
 				B3243AD8202AF7CE00D0ABD3 /* PandaTiileOverlay.swift */,
 				B3243ADA202AF7D000D0ABD3 /* TiileOverlay.swift */,
 			);
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3A440D02025A9F4005DC45C /* LaunchScreen.storyboard in Resources */,
+				B3B4EA9E2087AFC100CDBB97 /* ding.mp3 in Resources */,
 				B3A440CD2025A9F4005DC45C /* Assets.xcassets in Resources */,
 				B3A440CB2025A9F4005DC45C /* Main.storyboard in Resources */,
 			);

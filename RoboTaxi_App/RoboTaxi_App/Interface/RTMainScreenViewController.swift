@@ -9,10 +9,15 @@
 
 import UIKit
 import MapKit
+import AVFoundation
+
+
 
 class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     private var visibleVehicles : [RTVehicle] = []
+    
+    var player: AVAudioPlayer?
     
     let barColor = UIColor(red:0.32, green:0.36, blue:0.44, alpha:1.0)
     
@@ -41,6 +46,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     private var currentVehicle = RTVehicle()
     private var currentDestination = MKMapItem()
     
+    
+    
     let loc = RTUserLocation.sharedInstance
     
     /*
@@ -52,18 +59,34 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝╚═╝           ╚═══╝  ╚═╝╚══════╝ ╚══╝╚══╝
  */
     
-    
+    func playSound() {
+        guard let url = Bundle.main.url(forResource: "ding", withExtension: "mp3") else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            let player = try AVAudioPlayer(contentsOf: url)
+            
+            player.play()
+            
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
     
     func displayNotificationView(title : String, subtitle : String, carID : String, isCarNotification : Bool, dismissButtonTitle : String) {
         
         print ("DISPLAYING NOTIF VIEW")
+        
+        self.playSound()
         
         self.notificationView.isHidden = false
         
         notificationViewTitle.text = title
         notificationViewSubtitle.text = subtitle
         notificationViewCarID.text = carID
-        notificationViewDismissButton.titleLabel?.text = dismissButtonTitle
+        notificationViewDismissButton.titleLabel!.text = "Cancel"
         
         if (isCarNotification) {
             notificationBeginTripButton.isHidden = false
