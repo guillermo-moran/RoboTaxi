@@ -49,11 +49,11 @@ class RTVehicleOrderController: NSObject {
             //Lets make up values for testing purposes. We'll fill these values in appropriately at a later date
             let userName = RTNetworkController.sharedInstance.getUsername()
             let userPass = RTNetworkController.sharedInstance.getPassword()
-            let userLocationLong = 1.0
-            let userLocationLat = 1.0
+            let userLocationLong = RTUserLocation.sharedInstance.getUserLongitude()
+            let userLocationLat = RTUserLocation.sharedInstance.getUserLatitude()
             let destinationLong = 1.0
             let destinationLat = 1.0
-            let userDate = "Today"
+            let userDate = "N/A"
             
             let requestType = "ORDER"; // "ORDER" is the type to request a trip/vehicle from the server
             

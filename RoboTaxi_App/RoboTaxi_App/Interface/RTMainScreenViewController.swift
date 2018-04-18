@@ -529,7 +529,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             main.async {
                 for vehicle in availableVehicles {
                     
-                    self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: false)
+                    var isUserVehicle = false
+                    if (self.currentVehicle.getVehicleID() == vehicle.getVehicleID()) {
+                        isUserVehicle = true
+                    }
+                    self.placeVehicleOnMap(vehicle: vehicle, isUserVehicle: isUserVehicle)
                     self.visibleVehicles.append(vehicle)
                     
                 }
@@ -650,6 +654,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 //self.showAlert(title: "Arrived", message: "You have arrived at your destination")
                 DispatchQueue.main.sync {
                     self.displayNotificationView(title: "You Have Arrived", subtitle: "Before leaving the vehicle, please make sure you collect your belongings.\n\n Total Charges: $0.00", carID: String(vehicle.getVehicleID()), isCarNotification: false, dismissButtonTitle: "End Trip")
+                    
+                    self.currentVehicle = RTVehicle()
+                    self.currentDestination = MKMapItem()
+                    self.removeAllRoutes()
                 }
             }
             else {
