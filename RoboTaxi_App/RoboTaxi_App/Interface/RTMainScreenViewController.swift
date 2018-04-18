@@ -256,6 +256,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             }
             
             sleep(5)
+            self.currentVehicle = vehicle
+            self.currentDestination = destination
             self.summonVehicle(vehicle: vehicle, userDestination: destination)
             
         })
@@ -587,8 +589,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             if (success == true) {
                 //self.showAlert(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.")
                 
-                self.currentVehicle = vehicle
-                self.currentDestination = userDestination
+                //self.currentVehicle = vehicle
+                //self.currentDestination = userDestination
                 
                 DispatchQueue.main.sync {
                     self.displayNotificationView(title: "Your Vehicle has Arrived!", subtitle: "Please make your way to your vehicle marked with the number \(vehicle.getVehicleID())\n\n Once you are inside the vehicle, press \"Begin Trip\"", carID: String(vehicle.getVehicleID()), isCarNotification: true, dismissButtonTitle: "Cancel Trip")
