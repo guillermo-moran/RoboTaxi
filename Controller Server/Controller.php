@@ -93,7 +93,6 @@ function main($userName, $userPass, $userLocationLong, $userLocationLat, $destin
 				return;
 			}
 			beginVehicleRouteSimulation($vehicleID, $routeCoordinates);
-			returnStatus("Success");
 			return;
 		}
 
@@ -266,7 +265,10 @@ function beginVehicleRouteSimulation($vehicleID, $routeString) {
 	$command = escapeshellcmd($cmd);
 	//echo $command;
 	$output = shell_exec($command);
-	echo $output;
+
+	if (strpos($output, 'SUCCESS') !== false) {
+    	returnStatus("Success");
+	}
 }
 
 function getNearestAvailableVehicle($userLatitude, $userLongitude) {
@@ -346,7 +348,7 @@ function verifyUserCredentials($user_name, $user_password, $requestType) {
 		return true;
 	}
 	else {
-		
+
 		if ($requestType === "AUTHENTICATE") {
 			returnStatus("Authentication Failure");
 		}

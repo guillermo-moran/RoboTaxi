@@ -26,11 +26,64 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
     
     @IBOutlet weak var loadingView: UIView!
     
+    @IBOutlet weak var notificationView: UIView!
+    @IBOutlet weak var notificationViewTitle : UILabel!
+    @IBOutlet weak var notificationViewSubtitle : UITextView!
+    @IBOutlet weak var notificationViewCarID : UILabel!
+    @IBOutlet weak var notificationBeginTripButton : UIButton!
+    @IBOutlet weak var notificationViewDismissButton : UIButton!
+
+
+    
     private var locationManager = CLLocationManager()
     private var userLocation = CLLocation()
     private var geocoder = KPRGeocoder()
+    private var currentVehicle = RTVehicle()
+    private var currentDestination = MKMapItem()
     
     let loc = RTUserLocation.sharedInstance
+    
+    /*
+     ███╗   ██╗ ██████╗ ████████╗██╗███████╗    ██╗   ██╗██╗███████╗██╗    ██╗
+     ████╗  ██║██╔═══██╗╚══██╔══╝██║██╔════╝    ██║   ██║██║██╔════╝██║    ██║
+     ██╔██╗ ██║██║   ██║   ██║   ██║█████╗      ██║   ██║██║█████╗  ██║ █╗ ██║
+     ██║╚██╗██║██║   ██║   ██║   ██║██╔══╝      ╚██╗ ██╔╝██║██╔══╝  ██║███╗██║
+     ██║ ╚████║╚██████╔╝   ██║   ██║██║          ╚████╔╝ ██║███████╗╚███╔███╔╝
+     ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝╚═╝           ╚═══╝  ╚═╝╚══════╝ ╚══╝╚══╝
+ */
+    
+    
+    
+    func displayNotificationView(title : String, subtitle : String, carID : String, isCarNotification : Bool, dismissButtonTitle : String) {
+        
+        print ("DISPLAYING NOTIF VIEW")
+        
+        self.notificationView.isHidden = false
+        
+        notificationViewTitle.text = title
+        notificationViewSubtitle.text = subtitle
+        notificationViewCarID.text = carID
+        notificationViewDismissButton.titleLabel?.text = dismissButtonTitle
+        
+        if (isCarNotification) {
+            notificationBeginTripButton.isHidden = false
+        }
+        else {
+            notificationBeginTripButton.isHidden = true
+        }
+    }
+    
+    @IBAction func dismissDisplayNotification() {
+        self.notificationView.isHidden = true
+    }
+    @IBAction func beginTripPressed(_ sender: Any) {
+        
+        DispatchQueue.global().async {
+            self.beginVehicleRoute(vehicle: self.currentVehicle, destination: self.currentDestination)
+        }
+        
+        self.dismissDisplayNotification()
+    }
     
     /*
      ██╗   ██╗ ██████╗    ███████╗████████╗██╗   ██╗███████╗███████╗
@@ -505,9 +558,19 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             (success) in
             
             if (success == true) {
-                self.showAlert(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.")
+                //self.showAlert(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.")
                 
-                self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
+                self.currentVehicle = vehicle
+                self.currentDestination = userDestination
+                
+                DispatchQueue.main.sync {
+                    self.displayNotificationView(title: "Your Vehicle has Arrived!", subtitle: "Please make your way to your vehicle marked with the number \(vehicle.getVehicleID())\n\n Once you are inside the vehicle, press \"Begin Trip\"", carID: String(vehicle.getVehicleID()), isCarNotification: true, dismissButtonTitle: "Cancel Trip")
+                }
+                
+                
+                
+                
+                //self.beginVehicleRoute(vehicle: vehicle, destination: userDestination)
                 
                 /*
                 let alertController = UIAlertController(title: "Your Vehicle Has Arrived", message: "Please make your way to the blue vehicle on the map. \n\n Your vehicle should have the number \(vehicle.getVehicleID()) on it's side.", preferredStyle: .actionSheet)
@@ -561,7 +624,10 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                     (success) in
                     
             if (success == true) {
-                self.showAlert(title: "Arrived", message: "You have arrived at your destination")
+                //self.showAlert(title: "Arrived", message: "You have arrived at your destination")
+                DispatchQueue.main.sync {
+                    self.displayNotificationView(title: "You Have Arrived", subtitle: "Before leaving the vehicle, please make sure you collect your belongings.\n\n Total Charges: $0.00", carID: String(vehicle.getVehicleID()), isCarNotification: false, dismissButtonTitle: "End Trip")
+                }
             }
             else {
                 self.showAlert(title: "Error", message: "Your vehicle has encountered an error.")

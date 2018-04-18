@@ -52,7 +52,8 @@ class RTVehicleController: NSObject {
                     
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Any]
                     //let posts = json["posts"] as? [[String: Any]] ?? []
-                    print(json)
+                    //print(json)
+                    //print("fuck")
                     
                     let success = json["status"] as! String;
                     

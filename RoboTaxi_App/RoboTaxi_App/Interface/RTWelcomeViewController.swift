@@ -63,9 +63,15 @@ class RTWelcomeViewController: UIViewController {
     
     @IBAction func signupButtonPressed(_ sender: Any) {
         
+        /*
         let alert = UIAlertController(title: "Coming Soon!", message: "This feature is still being worked on.", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
+        */
+        
+        let goToRegViewController = self.storyboard?.instantiateViewController(withIdentifier: "RTRegisterViewController") as! RTRegisterViewController
+        
+        self.present(goToRegViewController, animated: true, completion: nil)
         
         
     }
