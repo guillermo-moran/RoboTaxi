@@ -18,7 +18,7 @@ $userDate			= $_POST["date"];
 function main($userName, $userPass, $userLocationLong, $userLocationLat, $destinationLong, $destinationLat, $userDate)
 {
 
-    $isAuthenticated = authenticate($userName, $userPass, NULL);
+    $isAuthenticated = authenticate($userName, $userPass);
 
     if (!$isAuthenticated) {
         returnStatus("User not authenticated!");
@@ -47,8 +47,8 @@ function authenticate($userName, $userPass) {
         CURLOPT_USERAGENT => 'ROBOTAXI_CLIENT_1.0',
         CURLOPT_POST => 1,
         CURLOPT_POSTFIELDS => array(
-            'user_name' 		=> $user_name,
-            'password' 			=> $user_password
+            'user_name' 		=> $userName,
+            'password' 			=> $userPass
         )
     ));
 
@@ -104,7 +104,7 @@ function createDummyOrder($user_name, $user_password, $user_date, $userLatitude,
 
     //JSON Example
 
-    $isAuthenticated = authenticate($user_name, $user_password, NULL);
+    $isAuthenticated = authenticate($user_name, $user_password);
 
     if (!$isAuthenticated) {
         returnStatus("User not authenticated!");
