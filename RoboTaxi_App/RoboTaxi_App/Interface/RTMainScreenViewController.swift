@@ -336,13 +336,18 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
     */
     
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        //let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 2500, 2500)
+        //mainMapView.setRegion(coordinateRegion, animated: false)
+    }
+    
     //Location didUpdateLocations delegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations.first!
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2500, 2500)
         mainMapView.setRegion(coordinateRegion, animated: false)
-        //locationManager.stopUpdatingLocation()
+        locationManager.stopUpdatingLocation()
     }
     
     /*
@@ -377,8 +382,6 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         //let tiileOverlay = PandaTiileOverlay(hasLabels: false, style: .light)
         //self.mainMapView.add(tiileOverlay.overlay, level: .aboveRoads) // .aboveLabels
         
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 0.5, 0.5)
-        mainMapView.setRegion(coordinateRegion, animated: true)
         
         loadAllVehicleAnnotations()
         

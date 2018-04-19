@@ -19,11 +19,11 @@ class RTUserLocation: NSObject, CLLocationManagerDelegate {
 
     
     override init() {
-        
-        self.currentLatitude = 0
-        self.currentLongitude = 0
-        
         self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
+        
+        self.currentLatitude  = 0
+        self.currentLongitude = 0
         
         super.init()
         
