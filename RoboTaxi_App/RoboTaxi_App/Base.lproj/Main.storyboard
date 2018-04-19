@@ -317,17 +317,6 @@
                                     <action selector="openUserSettings:" destination="LCQ-O3-7LE" eventType="touchUpInside" id="fAk-SU-3eH"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dKg-z8-F78">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tbM-sH-oaN">
-                                        <rect key="frame" x="169" y="315" width="37" height="37"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.16364609771573602" green="0.16364609771573602" blue="0.16364609771573602" alpha="0.36301369863013699" colorSpace="custom" customColorSpace="displayP3"/>
-                            </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L7u-0m-mwg">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
@@ -404,13 +393,31 @@
                                     <constraint firstItem="lmd-OA-jdj" firstAttribute="top" secondItem="L7u-0m-mwg" secondAttribute="top" constant="63" id="w30-JK-5v3"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKg-z8-F78">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tbM-sH-oaN">
+                                        <rect key="frame" x="169" y="388" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.16364609771573602" green="0.16364609771573602" blue="0.16364609771573602" alpha="0.36301369863013699" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstItem="tbM-sH-oaN" firstAttribute="leading" secondItem="dKg-z8-F78" secondAttribute="leading" constant="169" id="Lhf-oJ-U5r"/>
+                                    <constraint firstItem="tbM-sH-oaN" firstAttribute="top" secondItem="dKg-z8-F78" secondAttribute="top" constant="388" id="gVV-ac-BQ2"/>
+                                    <constraint firstAttribute="trailing" secondItem="tbM-sH-oaN" secondAttribute="trailing" constant="169" id="gcz-KM-K8j"/>
+                                    <constraint firstAttribute="bottom" secondItem="tbM-sH-oaN" secondAttribute="bottom" constant="387" id="vzz-P3-KoF"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9nj-35-tNj" firstAttribute="bottom" secondItem="W6w-K6-bzQ" secondAttribute="bottom" constant="34" id="0di-Qw-4s0"/>
                             <constraint firstItem="L7u-0m-mwg" firstAttribute="trailing" secondItem="W6w-K6-bzQ" secondAttribute="trailing" id="61S-pE-ezc"/>
                             <constraint firstItem="L7u-0m-mwg" firstAttribute="leading" secondItem="W6w-K6-bzQ" secondAttribute="leading" id="7aN-px-GSq"/>
+                            <constraint firstItem="dKg-z8-F78" firstAttribute="leading" secondItem="W6w-K6-bzQ" secondAttribute="leading" id="Bqa-2E-QlZ"/>
                             <constraint firstItem="5Bo-fx-MY5" firstAttribute="leading" secondItem="wex-LJ-ugH" secondAttribute="trailing" constant="8" symbolic="YES" id="Cmx-dO-JjP"/>
+                            <constraint firstAttribute="bottom" secondItem="dKg-z8-F78" secondAttribute="bottom" id="Ibf-Ag-F9k"/>
+                            <constraint firstItem="dKg-z8-F78" firstAttribute="trailing" secondItem="W6w-K6-bzQ" secondAttribute="trailing" id="KvO-WN-bAf"/>
                             <constraint firstItem="9nj-35-tNj" firstAttribute="trailing" secondItem="W6w-K6-bzQ" secondAttribute="trailing" id="L50-Ah-Vl6"/>
                             <constraint firstItem="W6w-K6-bzQ" firstAttribute="bottom" secondItem="L7u-0m-mwg" secondAttribute="bottom" constant="-34" id="YHK-Qg-bbO"/>
                             <constraint firstItem="5Bo-fx-MY5" firstAttribute="top" secondItem="W6w-K6-bzQ" secondAttribute="top" constant="12" id="YtY-ev-7uF"/>
@@ -420,6 +427,7 @@
                             <constraint firstItem="9nj-35-tNj" firstAttribute="top" secondItem="Jtp-Yh-Jcf" secondAttribute="top" id="pVh-Ei-xgP"/>
                             <constraint firstItem="5Bo-fx-MY5" firstAttribute="centerY" secondItem="wex-LJ-ugH" secondAttribute="centerY" id="uU7-EZ-1jS"/>
                             <constraint firstItem="L7u-0m-mwg" firstAttribute="top" secondItem="Jtp-Yh-Jcf" secondAttribute="top" id="yA7-je-n1c"/>
+                            <constraint firstItem="dKg-z8-F78" firstAttribute="top" secondItem="Jtp-Yh-Jcf" secondAttribute="top" id="zdi-rL-Eze"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="W6w-K6-bzQ"/>
                     </view>
