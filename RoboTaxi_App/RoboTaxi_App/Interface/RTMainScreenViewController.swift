@@ -64,9 +64,11 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
             try AVAudioSession.sharedInstance().setActive(true)
             
-            let player = try AVAudioPlayer(contentsOf: url)
+            // For iOS 11
+            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             
-            player.play()
+            guard let aPlayer = player else { return }
+            aPlayer.play()
             
         } catch let error {
             print(error.localizedDescription)
