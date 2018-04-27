@@ -311,8 +311,8 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
                 print("Matches found")
                 
                 for item in response!.mapItems {
-                    print("Name = \(item.name)")
-                    print("Phone = \(item.phoneNumber)")
+                    //print("Name = \(item.name)")
+                    //print("Phone = \(item.phoneNumber)")
                     
                     self.matchingItems.append(item as MKMapItem)
                     print("Matching items = \(self.matchingItems.count)")
@@ -387,7 +387,7 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
         
         loadAllVehicleAnnotations()
         
-        //Refresh map vehicles every 2 minutes
+        //Refresh map vehicles every 10 seconds
         
         
         var _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.loadAllVehicleAnnotations), userInfo: nil, repeats: true)
@@ -572,8 +572,6 @@ class RTMainScreenViewController: UIViewController, CLLocationManagerDelegate, M
      ██║  ██║╚██████╔╝╚██████╔╝   ██║   ██║██║ ╚████║╚██████╔╝
      ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
     */
-    
-   
     
     func summonVehicle(vehicle : RTVehicle, userDestination : MKMapItem) {
         
