@@ -40,10 +40,10 @@ def main():
             array.append(args[i])
 
             if count % 2 == 0 :
-                
+
                 moveVehicle(vehicleID, array)
                 array = []
-                time.sleep(2)
+                time.sleep(1)
 
         setVehicleInUse(vehicleID, False)
 

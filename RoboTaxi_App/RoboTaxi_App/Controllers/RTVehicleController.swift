@@ -28,6 +28,8 @@ class RTVehicleController: NSObject {
             let userName    = RTNetworkController.sharedInstance.getUsername()
             let userPass    = RTNetworkController.sharedInstance.getPassword()
             let vehicleID   = vehicle.getVehicleID()
+        
+            //Remove " " (space) at the end of the string
             let coordinates = routeCoordinateString.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression)
         
            

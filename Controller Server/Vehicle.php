@@ -9,6 +9,8 @@
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚══════╝╚══════╝╚══════╝
  */
 
+ include_once 'Utils.php';
+
  class Vehicle {
 
 	 static public function returnUpdatedVehicleInfoArray($vehicleID, $requestType) {
@@ -86,21 +88,39 @@
 
 	 	*/
 
-
-
 	  	//echo json_decode($jsonResp, false); //'true' returns an array instead of a json object
 
 	 }
 
 	 static public function beginVehicleRouteSimulation($vehicleID, $routeString) {
-	 	$cmd = './Sim/VehicleSim.py' . " " . $vehicleID . " " . $routeString;
-	 	$command = escapeshellcmd($cmd);
-	 	//echo $command;
-	 	$output = shell_exec($command);
 
-	 	if (strpos($output, 'SUCCESS') !== false) {
-	     	Status::returnStatus("Success");
-	 	}
+         /*
+         $coordinatesArray = Utils::explodeEveryNth(' ', $routeString, 2);
+
+         $coordinateCount = count($coordinatesArray);
+
+         $newRouteString = "";
+
+         if ($coordinateCount > 15) {
+             $count = 1;
+
+             while ($count < $coordinateCount) {
+                 if ($count % 2) {
+                     $newRouteString = $newRouteString . " " . $coordinatesArray[$count -1];
+                 }
+             }
+             $routeString = $newRouteString;
+         }
+         */
+
+         $cmd = './Sim/VehicleSim.py' . " " . $vehicleID . " " . $routeString;
+         $command = escapeshellcmd($cmd);
+	 	 //echo $command;
+	 	 $output = shell_exec($command);
+
+	 	 if (strpos($output, 'SUCCESS') !== false) {
+	      	Status::returnStatus("Success");
+	 	 }
 	 }
 
 	 static public function getNearestAvailableVehicle($userLatitude, $userLongitude) {
