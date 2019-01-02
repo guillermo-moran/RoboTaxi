@@ -2,7 +2,10 @@ RoboTaxi
 -----
 Transportation  as a service
 
-COSC 3339 and COSC 4157 semester project
+It is an application similar to Uber that simulates ordering, deploying, and moving "phantom" vehicles around a city.
 
-It uses an iOS app and a few Reclaim hosting server instances in the
-background to provide the services specified by the customer.
+It works with any city it's put in, as long as there's a vehicle on the map (anywhere).
+
+With a little more work, RoboTaxi could function with real vehicles, provided that it has GPS and internet capabilities.
+
+Unfortunately, the backend is written in PHP and MySQL. The iPhone app is written in Swift, and can be adapted for a new API.
