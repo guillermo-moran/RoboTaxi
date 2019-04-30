@@ -12,5 +12,5 @@ Unfortunately, the backend is written in PHP and MySQL. The iPhone app is writte
 
 ## Credits
 
-Swift Application and PHP Controller written entirely by me (Guillermo Moran). 
-Other backend components written my Mohammed, Shakar, and Marcus Eicher.
+Swift Application and PHP Controller written  by me (Guillermo Moran). 
+Other backend components written by Mohammed, Shakar, and Marcus Eicher.
